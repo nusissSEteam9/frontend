@@ -1,6 +1,5 @@
 <template>
   <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
+    NUS-ISS DevSecOps Practice Module
   </div>
 </template>
