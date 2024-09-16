@@ -1,0 +1,42 @@
+name: Deploy to S3
+
+on:
+  push:
+    branches:
+      - main  # Triggers when code is pushed to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up Bun.js, alternative to Node.js
+      - name: Set up Bun.js
+        uses: oven-sh/setup-bun@v2
+        
+
+      # Install dependencies
+      - name: Install dependencies
+        run: bun install
+
+      # Build the Nuxt.js app
+      - name: Build Nuxt.js
+        run: bun run generate
+
+      # Deploy to S3
+      - name: Deploy
+        uses: reggionick/s3-deploy@v3
+        with:
+          folder: .output/public
+          bucket: ${{ secrets.S3_BUCKET }}
+          bucket-region: ${{ secrets.S3_BUCKET_REGION }}
+          dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+          invalidation: /
+          delete-removed: true
+          no-cache: true
+          private: true
+          files-to-include: ".*/*,*/*,**"
