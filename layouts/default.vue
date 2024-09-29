@@ -1,6 +1,10 @@
 <template>
-  <div>
-    <NavBar/>
-    <slot/>
-  </div>
+    <div>
+        <Navbar />
+        <slot />
+    </div>
 </template>
+
+<script>
+import Navbar from '~/components/Navbar.vue'
+</script>
