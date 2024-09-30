@@ -1,5 +1,5 @@
 <template>
   <div>
-    NUS-ISS DevSecOps Practice Module
+    <NuxtPage />
   </div>
 </template>

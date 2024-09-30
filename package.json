@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "@nuxt/eslint": "^0.5.7",
-    "nuxt": "^3.13.0",
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.3",
+    "nuxt": "^3.13.2",
+    "sass": "^1.79.4",
     "vue": "latest",
     "vue-router": "latest"
   }
