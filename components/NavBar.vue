@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <nuxt-link class="navbar-brand" to="/">Healthier Recipes</nuxt-link>
       <button
-class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"/>
       </button>
@@ -11,7 +11,7 @@ class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar
         <ul class="navbar-nav mr-auto justify-content-center">
           <li v-for="(item, index) in menuItems" :key="index" class="nav-item dropdown">
             <a
-class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+              class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
               aria-expanded="false">{{ item.title }}</a>
             <div class="dropdown-menu">
               <nuxt-link v-for="(subItem, subIndex) in item.subItems" :key="subIndex" class="dropdown-item" :to="subItem.link">{{ subItem.name }}</nuxt-link>
@@ -20,7 +20,7 @@ class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-ha
           </li>
           <li class="nav-item dropdown">
             <a
-id="navbarDropdown" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+              id="navbarDropdown" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
               <img src="/user.png" style="width: 25px; height: 25px;">
             </a>
@@ -63,101 +63,98 @@ id="navbarDropdown" class="nav-link dropdown-toggle" role="button" data-bs-toggl
   </nav>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      menuItems: [
-        {
-          title: 'Cuisine',
-          subItems: [
-            { name: 'African', link: '/recipe/search/african' },
-            { name: 'American', link: '/recipe/search/american' },
-            { name: 'Asian', link: '/recipe/search/asian' },
-            { name: 'Italian', link: '/recipe/search/italian' },
-            { name: 'Mexican', link: '/recipe/search/mexican' },
-            { name: 'French', link: '/recipe/search/french' },
-            { name: 'Indian', link: '/recipe/search/indian' }
-          ]
-        },
-        {
-          title: 'Type of Dish',
-          subItems: [
-            { name: 'Appetizers', link: '/recipe/search/appetizers' },
-            { name: 'Breakfast', link: '/recipe/search/breakfast' },
-            { name: 'Desserts', link: '/recipe/search/desserts' },
-            { name: 'Main Dish', link: '/recipe/search/main-dish' },
-            { name: 'Salads', link: '/recipe/search/salads' },
-            { name: 'Soups-Stews', link: '/recipe/search/soup' },
-            { name: 'Snacks', link: '/recipe/search/snack' }
-          ]
-        },
-        {
-          title: 'Cooking Method',
-          subItems: [
-            { name: 'Baking', link: '/recipe/search/baking' },
-            { name: 'Grilling', link: '/recipe/search/grilling' },
-            { name: 'Slow-Cooker', link: '/recipe/search/slow' },
-            { name: 'Stir-Fry', link: '/recipe/search/stir' },
-            { name: 'No-Cook', link: '/recipe/search/no-cook' },
-            { name: 'Roasting', link: '/recipe/search/roasting' },
-            { name: 'Fry', link: '/recipe/search/fry' }
-          ]
-        },
-        {
-          title: 'Dietary Considerations',
-          subItems: [
-            { name: 'Vegan', link: '/recipe/search/vegan' },
-            { name: 'Vegetarian', link: '/recipe/search/vege' },
-            { name: 'Gluten-Free', link: '/recipe/search/gluten' },
-            { name: 'Low-Carb', link: '/recipe/search/low-carb' },
-            { name: 'Diabetic', link: '/recipe/search/diabetic' },
-            { name: 'Low-Fat', link: '/recipe/search/low-fat' },
-            { name: 'High-Protein', link: '/recipe/search/high-protein' }
-          ]
-        },
-        {
-          title: 'Ingredients',
-          subItems: [
-            { name: 'Chicken', link: '/recipe/search/chicken' },
-            { name: 'Beef', link: '/recipe/search/beef' },
-            { name: 'Pasta', link: '/recipe/search/pasta' },
-            { name: 'Chocolate', link: '/recipe/search/chocolate' },
-            { name: 'Vegetables', link: '/recipe/search/vegetables' },
-            { name: 'Pork', link: '/recipe/search/pork' },
-            { name: 'Cheese', link: '/recipe/search/cheese' }
-          ]
-        },
-        {
-          title: 'Occasions and Events',
-          subItems: [
-            { name: 'Christmas', link: '/recipe/search/christmas' },
-            { name: 'Easter', link: '/recipe/search/easter' },
-            { name: 'Thanksgiving', link: '/recipe/search/thanksgiving' },
-            { name: 'Birthday', link: '/recipe/search/birthday' },
-            { name: 'Wedding', link: '/recipe/search/wedding' },
-            { name: 'Halloween', link: '/recipe/search/halloween' },
-            { name: 'New Year', link: '/recipe/search/new-year' }
-          ]
-        },
-        {
-          title: 'Preparation Time and Difficulty',
-          subItems: [
-            { name: '15-Minutes-or-Less', link: '/recipe/search/15' },
-            { name: '30-Minutes-or-Less', link: '/recipe/search/30' },
-            { name: 'Easy', link: '/recipe/search/easy' },
-            { name: 'Beginner-Cook', link: '/recipe/search/beginner-cook' },
-            { name: 'Quick-and-Easy', link: '/recipe/search/quick-and-easy' },
-            { name: 'Kid-Friendly', link: '/recipe/search/kid-friendly' },
-            { name: 'Make-Ahead', link: '/recipe/search/make-ahead' }
-          ]
-        }
-      ],
-      isAdmin: false, // Replace with actual logic to determine if the user is an admin
-      isLoggedIn: false // Replace with actual logic to determine if the user is logged in
-    };
+<script setup>
+import { reactive } from 'vue';
+
+const menuItems = reactive([
+  {
+    title: 'Cuisine',
+    subItems: [
+      { name: 'African', link: '/recipe/search/african' },
+      { name: 'American', link: '/recipe/search/american' },
+      { name: 'Asian', link: '/recipe/search/asian' },
+      { name: 'Italian', link: '/recipe/search/italian' },
+      { name: 'Mexican', link: '/recipe/search/mexican' },
+      { name: 'French', link: '/recipe/search/french' },
+      { name: 'Indian', link: '/recipe/search/indian' }
+    ]
+  },
+  {
+    title: 'Type of Dish',
+    subItems: [
+      { name: 'Appetizers', link: '/recipe/search/appetizers' },
+      { name: 'Breakfast', link: '/recipe/search/breakfast' },
+      { name: 'Desserts', link: '/recipe/search/desserts' },
+      { name: 'Main Dish', link: '/recipe/search/main-dish' },
+      { name: 'Salads', link: '/recipe/search/salads' },
+      { name: 'Soups-Stews', link: '/recipe/search/soup' },
+      { name: 'Snacks', link: '/recipe/search/snack' }
+    ]
+  },
+  {
+    title: 'Cooking Method',
+    subItems: [
+      { name: 'Baking', link: '/recipe/search/baking' },
+      { name: 'Grilling', link: '/recipe/search/grilling' },
+      { name: 'Slow-Cooker', link: '/recipe/search/slow' },
+      { name: 'Stir-Fry', link: '/recipe/search/stir' },
+      { name: 'No-Cook', link: '/recipe/search/no-cook' },
+      { name: 'Roasting', link: '/recipe/search/roasting' },
+      { name: 'Fry', link: '/recipe/search/fry' }
+    ]
+  },
+  {
+    title: 'Dietary Considerations',
+    subItems: [
+      { name: 'Vegan', link: '/recipe/search/vegan' },
+      { name: 'Vegetarian', link: '/recipe/search/vege' },
+      { name: 'Gluten-Free', link: '/recipe/search/gluten' },
+      { name: 'Low-Carb', link: '/recipe/search/low-carb' },
+      { name: 'Diabetic', link: '/recipe/search/diabetic' },
+      { name: 'Low-Fat', link: '/recipe/search/low-fat' },
+      { name: 'High-Protein', link: '/recipe/search/high-protein' }
+    ]
+  },
+  {
+    title: 'Ingredients',
+    subItems: [
+      { name: 'Chicken', link: '/recipe/search/chicken' },
+      { name: 'Beef', link: '/recipe/search/beef' },
+      { name: 'Pasta', link: '/recipe/search/pasta' },
+      { name: 'Chocolate', link: '/recipe/search/chocolate' },
+      { name: 'Vegetables', link: '/recipe/search/vegetables' },
+      { name: 'Pork', link: '/recipe/search/pork' },
+      { name: 'Cheese', link: '/recipe/search/cheese' }
+    ]
+  },
+  {
+    title: 'Occasions and Events',
+    subItems: [
+      { name: 'Christmas', link: '/recipe/search/christmas' },
+      { name: 'Easter', link: '/recipe/search/easter' },
+      { name: 'Thanksgiving', link: '/recipe/search/thanksgiving' },
+      { name: 'Birthday', link: '/recipe/search/birthday' },
+      { name: 'Wedding', link: '/recipe/search/wedding' },
+      { name: 'Halloween', link: '/recipe/search/halloween' },
+      { name: 'New Year', link: '/recipe/search/new-year' }
+    ]
+  },
+  {
+    title: 'Preparation Time and Difficulty',
+    subItems: [
+      { name: '15-Minutes-or-Less', link: '/recipe/search/15' },
+      { name: '30-Minutes-or-Less', link: '/recipe/search/30' },
+      { name: 'Easy', link: '/recipe/search/easy' },
+      { name: 'Beginner-Cook', link: '/recipe/search/beginner-cook' },
+      { name: 'Quick-and-Easy', link: '/recipe/search/quick-and-easy' },
+      { name: 'Kid-Friendly', link: '/recipe/search/kid-friendly' },
+      { name: 'Make-Ahead', link: '/recipe/search/make-ahead' }
+    ]
   }
-};
+]);
+
+const isAdmin = ref(false); // Replace with actual logic to determine if the user is an admin
+const isLoggedIn = ref(false); // Replace with actual logic to determine if the user is logged in
 </script>
 
 <style scoped>
