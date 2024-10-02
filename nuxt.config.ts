@@ -7,14 +7,13 @@ export default defineNuxtConfig({
   runtimeConfig: {
     backendProxyUrl: 'http://localhost:8090/api/'
   },
-  /* bootstrap css */
-  css: ['~/assets/scss/styles.scss'],
-  build: {
-    transpile: ['bootstrap']
-  },
-  plugins: ['~/plugins/bootstrap.client.ts'],
-  devServer: {
-    port: 3333
-  },
-
+  css: [
+    '@/assets/css/global.css',
+    '@/assets/css/button.css',
+    '@/assets/css/form.css',
+    '@/assets/css/navbar.css',
+    '@/assets/css/table-columns.css',
+    '@/assets/css/user-rating.css',
+    'bootstrap-icons/font/bootstrap-icons.css'
+  ]
 })

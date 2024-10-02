@@ -12,6 +12,7 @@
   "dependencies": {
     "@nuxt/eslint": "^0.5.7",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "nuxt": "^3.13.2",
     "vue": "latest",
     "vue-router": "latest"
