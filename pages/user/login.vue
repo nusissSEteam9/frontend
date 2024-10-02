@@ -13,7 +13,7 @@
       </div>
       <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
       <button type="submit" style="margin-right: 15px;">Login</button>
-      <button type="button" @click="redirectToRegister">Register</button>
+      <nuxt-link to="/user/register"><button type="button">Register</button></nuxt-link>
     </form>
   </div>
 </template>
@@ -34,14 +34,14 @@ const handleSubmit = async () => {
       }
     });
     // Handle successful login
+    console.log(response);
   } catch (error) {
     errorMessage.value = 'Invalid username or password';
+    console.error('Error logging in:', error);
   }
 };
 
-const redirectToRegister = () => {
-  window.location.href = '/user/register';
-};
+
 </script>
 <style>
 button {
