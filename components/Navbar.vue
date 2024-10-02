@@ -6,11 +6,11 @@
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto" style="justify-content: center;display: flex;flex: 1;">
           <!-- Cuisine -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
+            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
               aria-expanded="false">
               Cuisine
             </a>
@@ -32,8 +32,8 @@
           </li>
 
           <!-- Type of Dish -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
+            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
               aria-expanded="false">
               Type of Dish
             </a>
@@ -55,8 +55,8 @@
           </li>
 
           <!-- Cooking Method -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
+            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
               aria-expanded="false">
               Cooking Method
             </a>
@@ -78,8 +78,8 @@
           </li>
 
           <!-- Dietary Considerations -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
+            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
               aria-expanded="false">
               Dietary Considerations
             </a>
@@ -101,8 +101,8 @@
           </li>
 
           <!-- Ingredients -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
+            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
               aria-expanded="false">
               Ingredients
             </a>
@@ -124,8 +124,8 @@
           </li>
 
           <!-- Occasions and Events -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
+            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
               aria-expanded="false">
               Occasions and Events
             </a>
@@ -147,8 +147,8 @@
           </li>
 
           <!-- Preparation Time and Difficulty -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
+            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
               aria-expanded="false">
               Preparation Time and Difficulty
             </a>
@@ -168,15 +168,16 @@
               <NuxtLink class="dropdown-item" to="/recipe/search/make-ahead">Make-Ahead</NuxtLink>
             </div>
           </li>
+        </ul>
 
+        <ul class="navbar-nav ms-auto">
           <!-- 用户部分 -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              <img src="/user.png" style="width: 25px; height: 25px;" />
+          <li class="nav-item dropdown" @mouseenter="showMenuWithDelayUser" @mouseleave="hideMenu">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" aria-expanded="false">
+              <i class="bi bi-person-circle" style="font-size: 18px;"></i>
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <!-- 用户登录后的部分 -->
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <!-- 用户登录后 -->
               <template v-if="user && user.type !== 'admin'">
                 <NuxtLink class="dropdown-item" to="/user/myProfile">My Profile</NuxtLink>
                 <div class="dropdown-divider"></div>
@@ -189,7 +190,7 @@
                 <NuxtLink class="dropdown-item" to="/user/shoppingList/view">Shopping List</NuxtLink>
               </template>
 
-              <!-- 管理员部分 -->
+              <!-- 管理员 -->
               <template v-if="user && user.type === 'admin'">
                 <NuxtLink class="dropdown-item" to="/user/admin/dashboard">Dashboard</NuxtLink>
                 <div class="dropdown-divider"></div>
@@ -202,7 +203,7 @@
                 <NuxtLink class="dropdown-item" to="/user/admin/generateCsvReport">Generate Csv</NuxtLink>
               </template>
 
-              <!-- 登录和登出选项 -->
+              <!-- 登录和登出 -->
               <template v-if="user">
                 <NuxtLink class="dropdown-item" to="/user/logout">Logout</NuxtLink>
               </template>
@@ -219,13 +220,35 @@
 
 <script setup>
 import { useAsyncData } from 'nuxt/app'
+import { ref } from 'vue';
 
-// 只获取用户数据
+// 用户数据
 const { data: user } = await useAsyncData('user', () =>
-  $fetch('/api/user') // 假设此API返回当前用户信息
+  $fetch('/api/user') // 此API返回当前用户信息
 )
+
+const showMenuWithDelay = (event) => {
+  const menu = event.target.querySelector('.dropdown-menu')
+  clearTimeout(hoverTimeout)
+  // 延迟300毫秒后显示菜单
+  hoverTimeout = setTimeout(() => {
+    menu.style.display = 'block'
+    dropdownVisible.value = true
+  }, 300)
+}
+
+const hideMenu = (event) => {
+  const menu = event.target.querySelector('.dropdown-menu')
+  clearTimeout(hoverTimeout)
+  // 鼠标离开时立即隐藏菜单
+  menu.style.display = 'none'
+  dropdownVisible.value = false
+}
 </script>
 
-<style>
-/* 根据需要加入样式 */
+<style scoped>
+.dropdown-menu-end {
+  right: 0;
+  left: auto; 
+}
 </style>
