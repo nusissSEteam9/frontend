@@ -1,12 +1,12 @@
 <template>
-  <title>Home</title>
   <div class="container" style="text-align: center; width: 80%; margin-top: 2.5%;">
+    <title>Home</title>
     <!-- 搜索表单 -->
-    <form @submit.prevent="searchRecipes" id="searchForm">
+    <form id="searchForm" @submit.prevent="searchRecipes">
       <div style="align-items: center;">
         <div style="position: relative;">
-          <input v-model="searchQuery" type="text" id="searchInput" placeholder="Search for healthy recipes here!"
-            style="width: 60%;" />
+          <input id="searchInput" v-model="searchQuery" type="text" placeholder="Search for healthy recipes here!"
+            style="width: 60%;">
           <select v-model="searchType" style="width: auto;">
             <option value="name">Name</option>
             <option value="description">Description</option>
@@ -14,10 +14,8 @@
           </select>
           <button id="toggleButton" type="button" class="button-style" @click="toggleMenu">☰</button>
           <div id="filterMenu" class="filter-menu" style="text-align: left;">
-            <input type="checkbox" id="filter1" v-model="filters.healthScore" /><label for="filter1">&nbsp;&nbsp;Health
-              Score ≥ 4</label><br />
-            <input type="checkbox" id="filter2" v-model="filters.calorieIntake" /><label for="filter2">&nbsp;&nbsp;Based
-              on my calorie intake</label>
+            <input id="filter1" v-model="filters.healthScore" type="checkbox">&nbsp;Health Score ≥ 4<br>
+            <input id="filter2" v-model="filters.calorieIntake" type="checkbox">&nbsp;Based on my calorie intake
           </div>
           <button type="submit" class="button-style" style="margin-bottom: 10px;">Search</button>
         </div>
@@ -30,7 +28,7 @@
         <div class="card mt-5" style="width: 18rem;">
           <NuxtLink :to="`/recipe/detail/${recipe.id}`">
             <img class="card-img-top" :src="`/images/${recipe.image}`" alt="Recipe Image"
-              style="width: 100%; height: 200px; object-fit: cover;" />
+              style="width: 100%; height: 200px; object-fit: cover;">
           </NuxtLink>
           <div class="card-body" style="min-height: 105px;">
             <h5 class="card-title">
@@ -57,19 +55,19 @@
     <div v-if="recipes.length > 0" style="margin-top: 30px;">
       <button
         :class="{ 'btn btn-outline-success': currentPage > 1, 'btn btn-outline-secondary disabled': currentPage === 1 }"
-        @click="goToPreviousPage" type="button">
+        type="button" @click="goToPreviousPage">
         «
       </button>
       <span>&nbsp; Page {{ currentPage }} of {{ totalPages }}&nbsp;</span>
       <button
         :class="{ 'btn btn-outline-success': currentPage < totalPages, 'btn btn-outline-secondary disabled': currentPage === totalPages }"
-        @click="goToNextPage" type="button">
+        type="button" @click="goToNextPage">
         »
       </button>
       <!-- 每页显示数量控制 -->
       <div v-if="recipes.length > 0" style="text-align: center; margin-top: 10px;">
-        <select v-model="pageSize" @change="updatePageSize" id="pageSize" class="custom-select-no-arrow"
-          style="width: auto; display: inline-block;font-size: small;">
+        <select id="pageSize" v-model="pageSize" style="width: auto; display: inline-block;font-size: small;"
+          class="custom-select-no-arrow" @change="updatePageSize">
           <option v-for="size in [8, 12, 16]" :key="size" :value="size">{{ size }}</option>
         </select>
         <label for="pageSize" class="col-form-label" style="font-size: small;">&nbsp;per page</label>
@@ -180,5 +178,68 @@ a {
 
 .custom-select-no-arrow::-ms-expand {
   display: none;
+}
+
+button {
+  padding: 5px 10px;
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #4cae4c;
+}
+
+.button-style {
+  border-radius: 4px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+#toggleButton {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+textarea {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: vertical;
+}
+
+#filterMenu {
+  display: none;
+  position: fixed;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 </style>

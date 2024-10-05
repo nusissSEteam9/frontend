@@ -9,11 +9,6 @@ export default defineNuxtConfig({
   },
   css: [
     '@/assets/css/global.css',
-    '@/assets/css/button.css',
-    '@/assets/css/form.css',
-    '@/assets/css/navbar.css',
-    '@/assets/css/table-columns.css',
-    '@/assets/css/user-rating.css',
     'bootstrap-icons/font/bootstrap-icons.css'
   ]
 })

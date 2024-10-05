@@ -1,214 +1,59 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <NuxtLink class="navbar-brand" to="/">Healthier Recipes</NuxtLink>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      <nuxt-link class="navbar-brand" to="/">Healthier Recipes</nuxt-link>
+      <button
+        class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon"/>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto" style="justify-content: center;display: flex;flex: 1;">
-          <!-- Cuisine -->
-          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
-            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
-              aria-expanded="false">
-              Cuisine
-            </a>
+      <div id="navbarSupportedContent" class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto justify-content-center">
+          <li v-for="(item, index) in menuItems" :key="index" class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+              aria-expanded="false">{{ item.title }}</a>
             <div class="dropdown-menu">
-              <NuxtLink class="dropdown-item" to="/recipe/search/african">African</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/american">American</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/asian">Asian</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/italian">Italian</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/mexican">Mexican</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/french">French</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/indian">Indian</NuxtLink>
+              <nuxt-link v-for="(subItem, subIndex) in item.subItems" :key="subIndex" class="dropdown-item" :to="subItem.link">{{ subItem.name }}</nuxt-link>
+              <div v-if="subIndex < item.subItems.length - 1" class="dropdown-divider"/>
             </div>
           </li>
-
-          <!-- Type of Dish -->
-          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
-            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
+          <li class="nav-item dropdown">
+            <a
+              id="navbarDropdown" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
-              Type of Dish
+              <i class="bi bi-person-circle" style="font-size: 18px;"/>
             </a>
-            <div class="dropdown-menu">
-              <NuxtLink class="dropdown-item" to="/recipe/search/appetizers">Appetizers</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/breakfast">Breakfast</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/desserts">Desserts</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/main-dish">Main Dish</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/salads">Salads</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/soup">Soups-Stews</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/snack">Snacks</NuxtLink>
-            </div>
-          </li>
-
-          <!-- Cooking Method -->
-          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
-            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
-              aria-expanded="false">
-              Cooking Method
-            </a>
-            <div class="dropdown-menu">
-              <NuxtLink class="dropdown-item" to="/recipe/search/baking">Baking</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/grilling">Grilling</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/slow">Slow-Cooker</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/stir">Stir-Fry</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/no-cook">No-Cook</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/roasting">Roasting</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/fry">Fry</NuxtLink>
-            </div>
-          </li>
-
-          <!-- Dietary Considerations -->
-          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
-            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
-              aria-expanded="false">
-              Dietary Considerations
-            </a>
-            <div class="dropdown-menu">
-              <NuxtLink class="dropdown-item" to="/recipe/search/vegan">Vegan</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/vege">Vegetarian</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/gluten">Gluten-Free</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/low-carb">Low-Carb</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/diabetic">Diabetic</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/low-fat">Low-Fat</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/high-protein">High-Protein</NuxtLink>
-            </div>
-          </li>
-
-          <!-- Ingredients -->
-          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
-            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
-              aria-expanded="false">
-              Ingredients
-            </a>
-            <div class="dropdown-menu">
-              <NuxtLink class="dropdown-item" to="/recipe/search/chicken">Chicken</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/beef">Beef</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/pasta">Pasta</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/chocolate">Chocolate</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/vegetables">Vegetables</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/pork">Pork</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/cheese">Cheese</NuxtLink>
-            </div>
-          </li>
-
-          <!-- Occasions and Events -->
-          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
-            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
-              aria-expanded="false">
-              Occasions and Events
-            </a>
-            <div class="dropdown-menu">
-              <NuxtLink class="dropdown-item" to="/recipe/search/christmas">Christmas</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/easter">Easter</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/thanksgiving">Thanksgiving</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/birthday">Birthday</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/wedding">Wedding</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/halloween">Halloween</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/new-year">New Year</NuxtLink>
-            </div>
-          </li>
-
-          <!-- Preparation Time and Difficulty -->
-          <li class="nav-item dropdown" @mouseenter="showMenuWithDelay" @mouseleave="hideMenu">
-            <a class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
-              aria-expanded="false">
-              Preparation Time and Difficulty
-            </a>
-            <div class="dropdown-menu">
-              <NuxtLink class="dropdown-item" to="/recipe/search/15">15-Minutes-or-Less</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/30">30-Minutes-or-Less</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/easy">Easy</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/beginner-cook">Beginner-Cook</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/quick-and-easy">Quick-and-Easy</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/kid-friendly">Kid-Friendly</NuxtLink>
-              <div class="dropdown-divider"></div>
-              <NuxtLink class="dropdown-item" to="/recipe/search/make-ahead">Make-Ahead</NuxtLink>
-            </div>
-          </li>
-        </ul>
-
-        <ul class="navbar-nav ms-auto">
-          <!-- 用户部分 -->
-          <li class="nav-item dropdown" @mouseenter="showMenuWithDelayUser" @mouseleave="hideMenu">
-            <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" aria-expanded="false">
-              <i class="bi bi-person-circle" style="font-size: 18px;"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <!-- 用户登录后 -->
-              <template v-if="user && user.type !== 'admin'">
-                <NuxtLink class="dropdown-item" to="/user/myProfile">My Profile</NuxtLink>
-                <div class="dropdown-divider"></div>
-                <NuxtLink class="dropdown-item" to="/user/member/myRecipeList">My Recipes</NuxtLink>
-                <div class="dropdown-divider"></div>
-                <NuxtLink class="dropdown-item" to="/user/member/savedList">Saved Recipes</NuxtLink>
-                <div class="dropdown-divider"></div>
-                <NuxtLink class="dropdown-item" to="/user/member/myReview">My Reviews</NuxtLink>
-                <div class="dropdown-divider"></div>
-                <NuxtLink class="dropdown-item" to="/user/shoppingList/view">Shopping List</NuxtLink>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <template v-if="!isAdmin">
+                <nuxt-link class="dropdown-item" to="/user/myProfile">My Profile</nuxt-link>
+                <div class="dropdown-divider"/>
+                <nuxt-link class="dropdown-item" to="/user/member/myRecipeList">My Recipes</nuxt-link>
+                <div class="dropdown-divider"/>
+                <nuxt-link class="dropdown-item" to="/user/member/savedList">Saved Recipes</nuxt-link>
+                <div class="dropdown-divider"/>
+                <nuxt-link class="dropdown-item" to="/user/member/myReview">My Reviews</nuxt-link>
+                <div class="dropdown-divider"/>
+                <nuxt-link class="dropdown-item" to="/user/shoppingList/view">Shopping List</nuxt-link>
+                <div class="dropdown-divider"/>
               </template>
-
-              <!-- 管理员 -->
-              <template v-if="user && user.type === 'admin'">
-                <NuxtLink class="dropdown-item" to="/user/admin/dashboard">Dashboard</NuxtLink>
-                <div class="dropdown-divider"></div>
-                <NuxtLink class="dropdown-item" to="/user/admin/memberManage">Manage Members</NuxtLink>
-                <div class="dropdown-divider"></div>
-                <NuxtLink class="dropdown-item" to="/user/admin/memberReport">Member Reports</NuxtLink>
-                <div class="dropdown-divider"></div>
-                <NuxtLink class="dropdown-item" to="/user/admin/recipeReport">Recipe Reports</NuxtLink>
-                <div class="dropdown-divider"></div>
-                <NuxtLink class="dropdown-item" to="/user/admin/generateCsvReport">Generate Csv</NuxtLink>
+              <template v-if="isAdmin">
+                <nuxt-link class="dropdown-item" to="/user/admin/dashboard">Dashboard</nuxt-link>
+                <div class="dropdown-divider"/>
+                <nuxt-link class="dropdown-item" to="/user/admin/memberManage">Manage Members</nuxt-link>
+                <div class="dropdown-divider"/>
+                <nuxt-link class="dropdown-item" to="/user/admin/memberReport">Member Reports</nuxt-link>
+                <div class="dropdown-divider"/>
+                <nuxt-link class="dropdown-item" to="/user/admin/recipeReport">Recipe Reports</nuxt-link>
+                <div class="dropdown-divider"/>
+                <nuxt-link class="dropdown-item" to="/user/admin/generateCsvReport">Generate Csv</nuxt-link>
+                <div class="dropdown-divider"/>
               </template>
-
-              <!-- 登录和登出 -->
-              <template v-if="user">
-                <NuxtLink class="dropdown-item" to="/user/logout">Logout</NuxtLink>
+              <template v-if="isLoggedIn">
+                <nuxt-link class="dropdown-item" to="/user/logout">Logout</nuxt-link>
               </template>
               <template v-else>
-                <NuxtLink class="dropdown-item" to="/user/login">Login</NuxtLink>
+                <nuxt-link class="dropdown-item" to="/user/login">Login</nuxt-link>
               </template>
             </div>
           </li>
@@ -219,36 +64,136 @@
 </template>
 
 <script setup>
-import { useAsyncData } from 'nuxt/app'
-import { ref } from 'vue';
+import { reactive } from 'vue';
 
-// 用户数据
-const { data: user } = await useAsyncData('user', () =>
-  $fetch('/api/user') // 此API返回当前用户信息
-)
+const menuItems = reactive([
+  {
+    title: 'Cuisine',
+    subItems: [
+      { name: 'African', link: '/recipe/search/african' },
+      { name: 'American', link: '/recipe/search/american' },
+      { name: 'Asian', link: '/recipe/search/asian' },
+      { name: 'Italian', link: '/recipe/search/italian' },
+      { name: 'Mexican', link: '/recipe/search/mexican' },
+      { name: 'French', link: '/recipe/search/french' },
+      { name: 'Indian', link: '/recipe/search/indian' }
+    ]
+  },
+  {
+    title: 'Type of Dish',
+    subItems: [
+      { name: 'Appetizers', link: '/recipe/search/appetizers' },
+      { name: 'Breakfast', link: '/recipe/search/breakfast' },
+      { name: 'Desserts', link: '/recipe/search/desserts' },
+      { name: 'Main Dish', link: '/recipe/search/main-dish' },
+      { name: 'Salads', link: '/recipe/search/salads' },
+      { name: 'Soups-Stews', link: '/recipe/search/soup' },
+      { name: 'Snacks', link: '/recipe/search/snack' }
+    ]
+  },
+  {
+    title: 'Cooking Method',
+    subItems: [
+      { name: 'Baking', link: '/recipe/search/baking' },
+      { name: 'Grilling', link: '/recipe/search/grilling' },
+      { name: 'Slow-Cooker', link: '/recipe/search/slow' },
+      { name: 'Stir-Fry', link: '/recipe/search/stir' },
+      { name: 'No-Cook', link: '/recipe/search/no-cook' },
+      { name: 'Roasting', link: '/recipe/search/roasting' },
+      { name: 'Fry', link: '/recipe/search/fry' }
+    ]
+  },
+  {
+    title: 'Dietary Considerations',
+    subItems: [
+      { name: 'Vegan', link: '/recipe/search/vegan' },
+      { name: 'Vegetarian', link: '/recipe/search/vege' },
+      { name: 'Gluten-Free', link: '/recipe/search/gluten' },
+      { name: 'Low-Carb', link: '/recipe/search/low-carb' },
+      { name: 'Diabetic', link: '/recipe/search/diabetic' },
+      { name: 'Low-Fat', link: '/recipe/search/low-fat' },
+      { name: 'High-Protein', link: '/recipe/search/high-protein' }
+    ]
+  },
+  {
+    title: 'Ingredients',
+    subItems: [
+      { name: 'Chicken', link: '/recipe/search/chicken' },
+      { name: 'Beef', link: '/recipe/search/beef' },
+      { name: 'Pasta', link: '/recipe/search/pasta' },
+      { name: 'Chocolate', link: '/recipe/search/chocolate' },
+      { name: 'Vegetables', link: '/recipe/search/vegetables' },
+      { name: 'Pork', link: '/recipe/search/pork' },
+      { name: 'Cheese', link: '/recipe/search/cheese' }
+    ]
+  },
+  {
+    title: 'Occasions and Events',
+    subItems: [
+      { name: 'Christmas', link: '/recipe/search/christmas' },
+      { name: 'Easter', link: '/recipe/search/easter' },
+      { name: 'Thanksgiving', link: '/recipe/search/thanksgiving' },
+      { name: 'Birthday', link: '/recipe/search/birthday' },
+      { name: 'Wedding', link: '/recipe/search/wedding' },
+      { name: 'Halloween', link: '/recipe/search/halloween' },
+      { name: 'New Year', link: '/recipe/search/new-year' }
+    ]
+  },
+  {
+    title: 'Preparation Time and Difficulty',
+    subItems: [
+      { name: '15-Minutes-or-Less', link: '/recipe/search/15' },
+      { name: '30-Minutes-or-Less', link: '/recipe/search/30' },
+      { name: 'Easy', link: '/recipe/search/easy' },
+      { name: 'Beginner-Cook', link: '/recipe/search/beginner-cook' },
+      { name: 'Quick-and-Easy', link: '/recipe/search/quick-and-easy' },
+      { name: 'Kid-Friendly', link: '/recipe/search/kid-friendly' },
+      { name: 'Make-Ahead', link: '/recipe/search/make-ahead' }
+    ]
+  }
+]);
 
-const showMenuWithDelay = (event) => {
-  const menu = event.target.querySelector('.dropdown-menu')
-  clearTimeout(hoverTimeout)
-  // 延迟300毫秒后显示菜单
-  hoverTimeout = setTimeout(() => {
-    menu.style.display = 'block'
-    dropdownVisible.value = true
-  }, 300)
-}
-
-const hideMenu = (event) => {
-  const menu = event.target.querySelector('.dropdown-menu')
-  clearTimeout(hoverTimeout)
-  // 鼠标离开时立即隐藏菜单
-  menu.style.display = 'none'
-  dropdownVisible.value = false
-}
+const isAdmin = ref(false); // Replace with actual logic to determine if the user is an admin
+const isLoggedIn = ref(false); // Replace with actual logic to determine if the user is logged in
 </script>
 
 <style scoped>
-.dropdown-menu-end {
-  right: 0;
-  left: auto; 
+.nav-item {
+    position: relative;
+}
+
+.navbar-collapse {
+    justify-content: center;
+}
+
+.no-caret .dropdown-toggle::after {
+    display: none;
+}
+
+.dropdown-menu {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.nav-item:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+}
+
+.nav-item a:hover {
+    background-color: #4cae4c;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
 }
 </style>

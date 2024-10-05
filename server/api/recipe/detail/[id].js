@@ -13,7 +13,7 @@ export default defineEventHandler((event) => {
         numberOfSaved: 450,
         submittedDate: "2022-09-15",
         member: {
-          id: 101,
+          id: 1,
           username: "john_doe",
         },
         tags: ["Healthy", "Chicken", "Salad"],
@@ -67,7 +67,7 @@ export default defineEventHandler((event) => {
         numberOfSaved: 320,
         submittedDate: "2022-10-10",
         member: {
-          id: 102,
+          id: 2,
           username: "vegan_chef",
         },
         tags: ["Vegan", "Healthy", "Bowl"],

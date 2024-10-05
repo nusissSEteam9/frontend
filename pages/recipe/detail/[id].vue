@@ -11,10 +11,9 @@
                     <td style="width: 450px;">
                         <div class="star-rating">
                             <span v-for="i in 5" :key="i">
-                                <i v-if="recipe.rating >= i" class="bi bi-star-fill" style="color: gold;"></i>
-                                <i v-else-if="recipe.rating >= i - 0.5" class="bi bi-star-half"
-                                    style="color: gold;"></i>
-                                <i v-else class="bi bi-star" style="color: darkgrey;"></i>
+                                <i v-if="recipe.rating >= i" class="bi bi-star-fill" style="color: gold;" />
+                                <i v-else-if="recipe.rating >= i - 0.5" class="bi bi-star-half" style="color: gold;" />
+                                <i v-else class="bi bi-star" style="color: darkgrey;" />
                             </span>
                             &nbsp;{{ recipe.rating }}
                             &nbsp;|&nbsp; {{ recipe.numberOfUserRatings }} &nbsp;<b>Reviews</b> &nbsp;| &nbsp; {{
@@ -31,27 +30,33 @@
                 <tr v-if="recipe.member">
                     <td style="font-size: 15px;">
                         <b>Created By: </b>
-                            <NuxtLink :to="`/user/profile/${recipe.member.id}`">&nbsp;{{ recipe.member.username }}</NuxtLink>
-                            &nbsp;&nbsp; |
-                            &nbsp;&nbsp; Submitted on {{ recipe.submittedDate }}
+                        <NuxtLink :to="`/user/profile/${recipe.member.id}`">&nbsp;{{ recipe.member.username }}
+                        </NuxtLink>
+                        &nbsp;&nbsp; |
+                        &nbsp;&nbsp; Submitted on {{ recipe.submittedDate }}
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <img :src="`/images/${recipe.image}`" alt="Recipe Image"
                             style="width: 350px; height: 250px; object-fit: contain;border: 2px solid #ccc; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                        <br /><br />
+                        <br><br>
                         <div class="btn-group" role="group" aria-label="Recipe Actions">
-                            <button type="button" class="btn btn-primary" @click="goToReview(recipe.id)">Add Review</button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-secondary" v-if="!isSaved" @click="saveRecipe(recipe.id)">Save</button>
-                            <button type="button" class="btn btn-secondary" v-else @click="unsaveRecipe(recipe.id)">Unsave</button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-danger" @click="reportRecipe(recipe.id)">Report</button>
+                            <button type="button" class="btn btn-primary" @click="goToReview(recipe.id)">Add
+                                Review</button>&nbsp;&nbsp;
+                            <button v-if="!isSaved" type="button" class="btn btn-secondary"
+                                @click="saveRecipe(recipe.id)">Save</button>
+                            <button v-else type="button" class="btn btn-secondary"
+                                @click="unsaveRecipe(recipe.id)">Unsave</button>&nbsp;&nbsp;
+                            <button type="button" class="btn btn-danger"
+                                @click="reportRecipe(recipe.id)">Report</button>
                         </div>
                     </td>
                     <td>
                         <div>
                             <h4><b>Nutritional Info</b></h4>
-                            <table class="table table-striped table-bordered"  style="margin-left:0; margin-right: auto; width:auto; text-align: center;">
+                            <table class="table table-striped table-bordered"
+                                style="margin-left:0; margin-right: auto; width:auto; text-align: center;">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>Nutrient</th>
@@ -95,7 +100,8 @@
                 <tr>
                     <td colspan="2">
                         <b>Tags: </b>
-                        <span v-for="(tag, index) in recipe.tags" :key="index" class="badge badge-info" style="margin-right: 5px;background-color: #17a2b8; color: white;">
+                        <span v-for="(tag, index) in recipe.tags" :key="index" class="badge badge-info"
+                            style="margin-right: 5px;background-color: #17a2b8; color: white;">
                             {{ tag }}
                         </span>
                     </td>
@@ -108,18 +114,19 @@
                 </tr>
             </tbody>
         </table>
-        <br/><br/>
+        <br><br>
         <!-- Ingredients and Steps -->
-        <div class="page-divide-container">
-            <div class="two-thirds-column" style="margin-right: 30px;">
+        <div>
+            <div style="margin-right: 30px;">
                 <div>
                     <h4><b>Ingredients</b></h4>
                     <ul style="margin-top: 20px;">
-                        <li v-for="(ingredient, index) in recipe.ingredients" :key="index" style="margin-bottom: 10px;">{{ ingredient.foodText }}
+                        <li v-for="(ingredient, index) in recipe.ingredients" :key="index" style="margin-bottom: 10px;">
+                            {{ ingredient.foodText }}
                         </li>
                     </ul>
                 </div>
-                <br />
+                <br>
                 <div>
                     <h4><b>Directions</b></h4>
                     <table style="margin-left:auto; margin-right: auto; width:100%">
@@ -133,7 +140,7 @@
                 </div>
             </div>
         </div>
-        <br/><br/>
+        <br><br>
         <!-- Reviews Section -->
         <div>
             <h4><b>Reviews</b></h4>
@@ -151,14 +158,13 @@
                         </div>
                         <div class="star-rating" style="margin-left: 48px;">
                             <span v-for="i in 5" :key="i">
-                                <i v-if="review.rating >= i" class="bi bi-star-fill" style="color: gold;"></i>
-                                <i v-else-if="review.rating >= i - 0.5" class="bi bi-star-half"
-                                    style="color: gold;"></i>
-                                <i v-else class="bi bi-star" style="color: darkgrey;"></i>
+                                <i v-if="review.rating >= i" class="bi bi-star-fill" style="color: gold;" />
+                                <i v-else-if="review.rating >= i - 0.5" class="bi bi-star-half" style="color: gold;" />
+                                <i v-else class="bi bi-star" style="color: darkgrey;" />
                             </span>
                             &nbsp;{{ review.reviewDate }}
                         </div>
-                        <br/>
+                        <br>
                         <p class="card-text" style="margin-left: 48px;">{{ review.comment }}</p>
                     </div>
                 </div>
@@ -181,21 +187,18 @@ const recipeId = route.params.id;
 
 const recipe = ref({});
 const reviews = ref([]);
-const isSaved = ref(false); // 假设我们从API得知用户是否已保存此食谱
+const isSaved = ref(false); // 假设从API得知用户是否已保存此食谱
 
-// 获取食谱详情和评论
 const fetchRecipeDetails = async () => {
     const { data: recipeData } = await useFetch(`/api/recipe/detail/${recipeId}`);
     recipe.value = recipeData.value || {};
     reviews.value = recipeData.value.reviews || [];
 };
 
-// 页面加载时获取食谱数据
 onMounted(() => {
     fetchRecipeDetails();
 });
 
-// 工具函数
 const getHealthScoreColor = (score) => {
     if (score >= 4) return 'green';
     if (score >= 2) return 'orange';
@@ -207,12 +210,12 @@ const goToReview = (id) => {
 };
 
 const saveRecipe = (id) => {
-    // API 调用保存食谱逻辑
+    // API 调用保存食谱
     isSaved.value = true;
 };
 
 const unsaveRecipe = (id) => {
-    // API 调用取消保存食谱逻辑
+    // API 调用取消保存食谱
     isSaved.value = false;
 };
 
