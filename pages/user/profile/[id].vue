@@ -17,7 +17,7 @@
         <h4>Recipes created by {{ member.username }}:</h4>
         <hr>
         <div style="text-align: center;">
-            <p v-if="!recipes.length">No Recipes Created</p>
+            <p v-if="!publicRecipes.length">No Recipes Created</p>
             <div v-else class="row">
                 <div v-for="recipe in paginatedRecipes" :key="recipe.id" class="col-md-3">
                     <div class="card mt-5" style="width: 18rem;">
@@ -54,16 +54,16 @@ import { useFetch } from 'nuxt/app';
 const route = useRoute();
 const userId = route.params.id;
 const member = ref({});
-const recipes = ref([]);
-const isAdmin = ref(false); // 假设通过 API 判断用户不是admin
+const publicRecipes = ref([]);
+const isAdmin = ref(false); // 从API返回值中获取
 const currentPage = ref(1);
 const itemsPerPage = 8;
 
-
 const fetchUserProfile = async () => {
-    const { data: userData } = await useFetch(`/api/user/profile/${userId}`);
+    const { data: userData } = await useFetch(`http://localhost:8080/user/profile/${userId}`);
     member.value = userData.value.member;
-    recipes.value = userData.value.recipes || [];
+    publicRecipes.value = userData.value.publicRecipes || [];
+    isAdmin.value = userData.value.ifAdmin;
 };
 
 onMounted(() => {
@@ -77,11 +77,11 @@ const reportMember = (id) => {
 const paginatedRecipes = computed(() => {
     const startIndex = (currentPage.value - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return recipes.value.slice(startIndex, endIndex);
+    return publicRecipes.value.slice(startIndex, endIndex);
 });
 
 const totalPages = computed(() => {
-    return Math.ceil(recipes.value.length / itemsPerPage);
+    return Math.ceil(publicRecipes.value.length / itemsPerPage);
 });
 
 const pagesToShow = computed(() => {

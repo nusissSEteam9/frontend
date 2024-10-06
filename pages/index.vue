@@ -14,8 +14,11 @@
           </select>
           <button id="toggleButton" type="button" class="button-style" @click="toggleMenu">☰</button>
           <div id="filterMenu" class="filter-menu" style="text-align: left;">
-            <input id="filter1" v-model="filters.healthScore" type="checkbox">&nbsp;Health Score ≥ 4<br>
-            <input id="filter2" v-model="filters.calorieIntake" type="checkbox">&nbsp;Based on my calorie intake
+            <input id="filter1" v-model="filters.healthScore" type="checkbox">
+            <label for="filter1" style="display: inline-block;">&nbsp;Health Score ≥ 4</label>
+            <br>
+            <input id="filter2" v-model="filters.calorieIntake" type="checkbox">
+            <label for="filter2" style="display: inline-block;">&nbsp;Based on my calorie intake</label>
           </div>
           <button type="submit" class="button-style" style="margin-bottom: 10px;">Search</button>
         </div>
@@ -24,7 +27,7 @@
 
     <!-- 搜索结果 -->
     <div v-if="recipes.length > 0" class="row">
-      <div v-for="recipe in paginatedRecipes" :key="recipe.id" class="col-md-3">
+      <div v-for="recipe in recipes" :key="recipe.id" class="col-md-3">
         <div class="card mt-5" style="width: 18rem;">
           <NuxtLink :to="`/recipe/detail/${recipe.id}`">
             <img class="card-img-top" :src="`/images/${recipe.image}`" alt="Recipe Image"
@@ -36,14 +39,6 @@
             </h5>
             <p class="card-text text-truncate" style="max-height: 3.6em; overflow: hidden;">{{ recipe.description }}</p>
           </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              <div class="user-profile" style="display: flex; align-items: center; justify-content: center;">
-                <i class="bi bi-person-circle" style="font-size: 24px; margin-right: 8px;" />
-                <NuxtLink :to="`/user/profile/${recipe.member.id}`">{{ recipe.member.username }}</NuxtLink>
-              </div>
-            </li>
-          </ul>
         </div>
       </div>
     </div>
@@ -54,13 +49,13 @@
     <!-- 分页控制 -->
     <div v-if="recipes.length > 0" style="margin-top: 30px;">
       <button
-        :class="{ 'btn btn-outline-success': currentPage > 1, 'btn btn-outline-secondary disabled': currentPage === 1 }"
+        :class="{ 'btn btn-outline-success': currentPage > 0, 'btn btn-outline-secondary disabled': currentPage === 0 }"
         type="button" @click="goToPreviousPage">
         «
       </button>
       <span>&nbsp; Page {{ currentPage }} of {{ totalPages }}&nbsp;</span>
       <button
-        :class="{ 'btn btn-outline-success': currentPage < totalPages, 'btn btn-outline-secondary disabled': currentPage === totalPages }"
+        :class="{ 'btn btn-outline-success': currentPage < totalPages - 1, 'btn btn-outline-secondary disabled': currentPage === totalPages - 1 }"
         type="button" @click="goToNextPage">
         »
       </button>
@@ -70,92 +65,89 @@
           class="custom-select-no-arrow" @change="updatePageSize">
           <option v-for="size in [8, 12, 16]" :key="size" :value="size">{{ size }}</option>
         </select>
-        <label for="pageSize" class="col-form-label" style="font-size: small;">&nbsp;per page</label>
+        <label for="pageSize" style="font-size: small;display: inline-block;">&nbsp;per page</label>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useFetch } from 'nuxt/app'
+import { ref, onMounted } from 'vue'
 
 const searchQuery = ref('')
-const searchType = ref('name')
+const searchType = ref('')
 const filters = ref({
   healthScore: false,
   calorieIntake: false
 })
 const recipes = ref([])
-const currentPage = ref(1)
-const pageSize = ref(8)
+const currentPage = ref(0)
 const totalPages = ref(1)
-const filtersVisible = ref(false)
+const pageSize = ref(8)
 
 // 从API获取数据
-const fetchRecipes = async () => {
-  const { data } = await useFetch('api/recipe/search', {
-    params: {
-      query: searchQuery.value || '',
-      searchtype: searchType.value || '',
-      filters: filters.value
-    }
-  })
-  recipes.value = data.value || []
-  totalPages.value = Math.ceil(recipes.value.length / pageSize.value)
+const searchRecipes = async () => {
+  const params = {
+    query: searchQuery.value || '',
+    searchtype: searchType.value || '',
+    filter1: filters.value.healthScore ? true : false,
+    filter2: filters.value.calorieIntake ? true : false,
+    pageNo: currentPage.value,
+    pageSize: pageSize.value,
+  };
+  try{
+    const data = await $fetch('http://localhost:8080/recipe/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams(params),
+    });
+    console.log(data);
+    recipes.value = data.results;
+    totalPages.value = data.totalPages;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 onMounted(() => {
-  fetchRecipes()
+  searchRecipes();
 })
 
-// 分页
-const paginatedRecipes = computed(() => {
-  const start = (currentPage.value - 1) * pageSize.value
-  const end = start + pageSize.value
-  return recipes.value.slice(start, end)
-})
-
-// 搜索
-const searchRecipes = async () => {
-  await fetchRecipes()
-  currentPage.value = 1
-  totalPages.value = Math.ceil(recipes.value.length / pageSize.value)
-}
-
-// 过滤
+// 过滤菜单的显示位置
 const toggleMenu = () => {
   const menu = document.getElementById('filterMenu')
   const toggleButton = document.getElementById('toggleButton')
   if (menu.style.display === 'block') {
     menu.style.display = 'none'
-    filtersVisible.value = false
   } else {
     const buttonRect = toggleButton.getBoundingClientRect()
     menu.style.display = 'block'
     menu.style.position = 'fixed'
     menu.style.top = `${buttonRect.bottom + 10}px`
     menu.style.left = `${buttonRect.left}px`
-    filtersVisible.value = true
   }
 }
 
 // 分页操作
 const goToPreviousPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--
+  if (currentPage.value > 0) {
+    currentPage.value--;
+    searchRecipes();
   }
 }
 
 const goToNextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++
+  if (currentPage.value < totalPages.value - 1) {
+    currentPage.value++;
+    searchRecipes();
   }
 }
 
 const updatePageSize = () => {
-  totalPages.value = Math.ceil(recipes.value.length / pageSize.value)
-  currentPage.value = 1
+  currentPage.value = 0;
+  searchRecipes();
 }
 </script>
 

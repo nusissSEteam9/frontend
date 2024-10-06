@@ -16,7 +16,7 @@
                                 <i v-else class="bi bi-star" style="color: darkgrey;" />
                             </span>
                             &nbsp;{{ recipe.rating }}
-                            &nbsp;|&nbsp; {{ recipe.numberOfUserRatings }} &nbsp;<b>Reviews</b> &nbsp;| &nbsp; {{
+                            &nbsp;|&nbsp; {{ recipe.numberOfRating }} &nbsp;<b>Reviews</b> &nbsp;| &nbsp; {{
                                 recipe.numberOfSaved }} &nbsp; <b>Saved</b>
                         </div>
                     </td>
@@ -27,7 +27,7 @@
                         </span>
                     </td>
                 </tr>
-                <tr v-if="recipe.member">
+                <!-- <tr v-if="recipe.member">
                     <td style="font-size: 15px;">
                         <b>Created By: </b>
                         <NuxtLink :to="`/user/profile/${recipe.member.id}`">&nbsp;{{ recipe.member.username }}
@@ -35,7 +35,7 @@
                         &nbsp;&nbsp; |
                         &nbsp;&nbsp; Submitted on {{ recipe.submittedDate }}
                     </td>
-                </tr>
+                </tr>暂无member -->
                 <tr>
                     <td>
                         <img :src="`/images/${recipe.image}`" alt="Recipe Image"
@@ -66,31 +66,31 @@
                                 <tbody>
                                     <tr>
                                         <td>Calories</td>
-                                        <td>{{ recipe.calories }} kcal</td>
+                                        <td>{{ recipe.calories !== null ? recipe.calories + ' kcal' : 'none' }}</td>
                                     </tr>
                                     <tr>
                                         <td>Protein</td>
-                                        <td>{{ recipe.protein }}</td>
+                                        <td>{{ recipe.protein !== null ? recipe.protein : 'none' }}</td>
                                     </tr>
                                     <tr>
                                         <td>Carbohydrate</td>
-                                        <td>{{ recipe.carbohydrate }}</td>
+                                        <td>{{ recipe.carbohydrate !== null ? recipe.carbohydrate : 'none'  }}</td>
                                     </tr>
                                     <tr>
                                         <td>Sugar</td>
-                                        <td>{{ recipe.sugar }}</td>
+                                        <td>{{ recipe.sugar !== null ? recipe.sugar : 'none'}}</td>
                                     </tr>
                                     <tr>
                                         <td>Sodium</td>
-                                        <td>{{ recipe.sodium }}</td>
+                                        <td>{{ recipe.sodium !== null ? recipe.sodium : 'none'}}</td>
                                     </tr>
                                     <tr>
                                         <td>Fat</td>
-                                        <td>{{ recipe.fat }}</td>
+                                        <td>{{ recipe.fat !== null ? recipe.fat : 'none'}}</td>
                                     </tr>
                                     <tr>
                                         <td>Saturated Fat</td>
-                                        <td>{{ recipe.saturatedFat }}</td>
+                                        <td>{{ recipe.saturatedFat !== null ? recipe.saturatedFat : 'none'}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -144,17 +144,18 @@
         <!-- Reviews Section -->
         <div>
             <h4><b>Reviews</b></h4>
-            <p v-if="reviews.length === 0" style="text-align: center;">No Reviews Yet</p>
+            <hr>
+            <p v-if="reviews.length === 0" style="text-align: left">No Reviews Yet</p>
             <div v-else>
                 <div v-for="(review, index) in reviews" :key="index" class="card mt-2">
                     <div class="card-body">
                         <div class="user-profile" style="display: flex; justify-content: space-between;">
-                            <div class="user-profile" style="display: flex;">
+                            <!-- <div class="user-profile" style="display: flex;">
                                 <img src="/user.png" style="width: 40px; height: 40px; margin-right: 8px;">
                                 <NuxtLink :to="`/user/profile/${review.member.id}`">
                                     <h5 class="card-title">{{ review.member.username }}</h5>
                                 </NuxtLink>
-                            </div>
+                            </div> 暂无member-->
                         </div>
                         <div class="star-rating" style="margin-left: 48px;">
                             <span v-for="i in 5" :key="i">
@@ -170,10 +171,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
     </div>
 </template>
 
@@ -190,7 +187,7 @@ const reviews = ref([]);
 const isSaved = ref(false); // 假设从API得知用户是否已保存此食谱
 
 const fetchRecipeDetails = async () => {
-    const { data: recipeData } = await useFetch(`/api/recipe/detail/${recipeId}`);
+    const { data: recipeData } = await useFetch(`http://localhost:8080/recipe/detail/${recipeId}`);
     recipe.value = recipeData.value || {};
     reviews.value = recipeData.value.reviews || [];
 };

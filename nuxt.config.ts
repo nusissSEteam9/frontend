@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: ['@nuxt/eslint'],
   ssr: false,
   runtimeConfig: {
-    backendProxyUrl: 'http://localhost:8090/api/'
+    backendProxyUrl: 'http://localhost:8080/api/'
   },
   css: [
     '@/assets/css/global.css',
