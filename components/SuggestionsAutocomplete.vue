@@ -4,11 +4,15 @@
     <input
       id="autocomplete"
       v-model="searchTerm"
-      :class="{ 'loading': isLoading }"
+      :class="{ loading: isLoading }"
       @input="getSuggestions"
-    >
+    />
     <ul v-if="suggestions.length > 0" class="suggestions-list">
-      <li v-for="suggestion in suggestions" :key="suggestion" @click="selectSuggestion(suggestion)">
+      <li
+        v-for="suggestion in suggestions"
+        :key="suggestion"
+        @click="selectSuggestion(suggestion)"
+      >
         {{ suggestion }}
       </li>
     </ul>
@@ -16,45 +20,45 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { useFetch } from '#app'
+import { ref, watch } from 'vue';
+import { useFetch } from '#app';
 
-const searchTerm = ref('')
-const suggestions = ref([])
-const isLoading = ref(false)
+const searchTerm = ref('');
+const suggestions = ref([]);
+const isLoading = ref(false);
 
 const getSuggestions = async () => {
   if (searchTerm.value.length < 1) {
-    suggestions.value = []
-    return
+    suggestions.value = [];
+    return;
   }
 
-  isLoading.value = true
+  isLoading.value = true;
   const { data, error } = await useFetch('/api/search', {
     method: 'GET',
-    params: { term: searchTerm.value }
-  })
+    params: { term: searchTerm.value },
+  });
 
   if (error.value) {
-    console.error('Error fetching suggestions:', error.value)
-    suggestions.value = []
+    console.error('Error fetching suggestions:', error.value);
+    suggestions.value = [];
   } else {
-    suggestions.value = data.value
+    suggestions.value = data.value;
   }
-  isLoading.value = false
-}
+  isLoading.value = false;
+};
 
 const selectSuggestion = (suggestion) => {
-  searchTerm.value = suggestion
-  suggestions.value = []
-}
+  searchTerm.value = suggestion;
+  suggestions.value = [];
+};
 
 // Debounce the API call to avoid too many requests
-let debounceTimer
+let debounceTimer;
 watch(searchTerm, () => {
-  clearTimeout(debounceTimer)
-  debounceTimer = setTimeout(getSuggestions, 300)
-})
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(getSuggestions, 300);
+});
 </script>
 
 <style scoped>

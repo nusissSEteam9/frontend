@@ -3,7 +3,7 @@ name: Deploy to S3
 on:
   push:
     branches:
-      - deploy  # Triggers when code is pushed to the 'main' branch
+      - deploy # Triggers when code is pushed to the 'main' branch
 
 jobs:
   deploy:
@@ -19,7 +19,6 @@ jobs:
       # Set up Bun.js, alternative to Node.js
       - name: Set up Bun.js
         uses: oven-sh/setup-bun@v2
-        
 
       # Install dependencies
       - name: Install dependencies
@@ -40,4 +39,3 @@ jobs:
           invalidation: /
           no-cache: true
           private: true
-          

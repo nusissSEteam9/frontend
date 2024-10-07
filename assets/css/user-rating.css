@@ -1,14 +1,14 @@
 .user-profile {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .star-rating {
-    font-size: 24px;
-    display: inline-block;
+  font-size: 24px;
+  display: inline-block;
 }
 
 .star {
-    cursor: pointer;
-    color: darkgrey;
+  cursor: pointer;
+  color: darkgrey;
 }

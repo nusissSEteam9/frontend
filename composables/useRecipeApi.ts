@@ -1,6 +1,5 @@
 // composables/useRecipeApi.ts
 
-
 interface Ingredient {
   id: number;
   name: string;
@@ -44,7 +43,9 @@ export function useRecipeApi() {
   };
 
   const unsubscribeRecipe = async (id: number): Promise<void> => {
-    const { data, error } = await useFetch<void>(`${baseUrl}/unsubscribe/${id}`);
+    const { data, error } = await useFetch<void>(
+      `${baseUrl}/unsubscribe/${id}`
+    );
     if (error.value) {
       throw new Error('Error unsubscribing from recipe');
     }
@@ -62,7 +63,7 @@ export function useRecipeApi() {
   const postReview = async (id: number, reviewData: any): Promise<void> => {
     const { data, error } = await useFetch<void>(`${baseUrl}/review/${id}`, {
       method: 'POST',
-      body: reviewData
+      body: reviewData,
     });
     if (error.value) {
       throw new Error('Error posting review');
@@ -71,7 +72,9 @@ export function useRecipeApi() {
   };
 
   const fetchIngredients = async (id: number): Promise<Ingredient[]> => {
-    const { data, error } = await useFetch<Ingredient[]>(`${baseUrl}/ingredients/${id}`);
+    const { data, error } = await useFetch<Ingredient[]>(
+      `${baseUrl}/ingredients/${id}`
+    );
     if (error.value) {
       throw new Error('Error fetching ingredients');
     }
@@ -97,7 +100,7 @@ export function useRecipeApi() {
   const addNewRecipe = async (recipeData: any): Promise<void> => {
     const { data, error } = await useFetch<void>(`${baseUrl}/add`, {
       method: 'POST',
-      body: recipeData
+      body: recipeData,
     });
     if (error.value) {
       throw new Error('Error adding new recipe');

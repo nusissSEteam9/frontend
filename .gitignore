@@ -23,5 +23,5 @@ logs
 .env.*
 !.env.example
 
-# thymeleaf templates
+# old files
 thymeleafcode
