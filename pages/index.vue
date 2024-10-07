@@ -1,53 +1,28 @@
 <template>
-  <div
-    class="container"
-    style="text-align: center; width: 80%; margin-top: 2.5%"
-  >
+  <div class="container" style="text-align: center; width: 80%; margin-top: 2.5%">
     <title>Home</title>
     <!-- 搜索表单 -->
     <form id="searchForm" @submit.prevent="searchRecipes">
       <div style="align-items: center">
         <div style="position: relative">
-          <input
-            id="searchInput"
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search for healthy recipes here!"
-            style="width: 60%"
-          />
+          <input id="searchInput" v-model="searchQuery" type="text" placeholder="Search for healthy recipes here!"
+            style="width: 60%" />
           <select v-model="searchType" style="width: auto">
             <option value="name">Name</option>
             <option value="description">Description</option>
             <option value="tag">Tag</option>
           </select>
-          <button
-            id="toggleButton"
-            type="button"
-            class="button-style"
-            @click="toggleMenu"
-          >
+          <button id="toggleButton" type="button" class="button-style" @click="toggleMenu">
             ☰
           </button>
           <div id="filterMenu" class="filter-menu" style="text-align: left">
             <input id="filter1" v-model="filters.healthScore" type="checkbox" />
-            <label for="filter1" style="display: inline-block"
-              >&nbsp;Health Score ≥ 4</label
-            >
+            <label for="filter1" style="display: inline-block">&nbsp;Health Score ≥ 4</label>
             <br />
-            <input
-              id="filter2"
-              v-model="filters.calorieIntake"
-              type="checkbox"
-            />
-            <label for="filter2" style="display: inline-block"
-              >&nbsp;Based on my calorie intake</label
-            >
+            <input id="filter2" v-model="filters.calorieIntake" type="checkbox" />
+            <label for="filter2" style="display: inline-block">&nbsp;Based on my calorie intake</label>
           </div>
-          <button
-            type="submit"
-            class="button-style"
-            style="margin-bottom: 10px"
-          >
+          <button type="submit" class="button-style" style="margin-bottom: 10px">
             Search
           </button>
         </div>
@@ -59,12 +34,8 @@
       <div v-for="recipe in recipes" :key="recipe.id" class="col-md-3">
         <div class="card mt-5" style="width: 18rem">
           <NuxtLink :to="`/recipe/detail/${recipe.id}`">
-            <img
-              class="card-img-top"
-              :src="`/images/${recipe.image}`"
-              alt="Recipe Image"
-              style="width: 100%; height: 200px; object-fit: cover"
-            />
+            <img class="card-img-top" :src="`/images/${recipe.image}`" alt="Recipe Image"
+              style="width: 100%; height: 200px; object-fit: cover" />
           </NuxtLink>
           <div class="card-body" style="min-height: 105px">
             <h5 class="card-title">
@@ -72,10 +43,7 @@
                 recipe.name
               }}</NuxtLink>
             </h5>
-            <p
-              class="card-text text-truncate"
-              style="max-height: 3.6em; overflow: hidden"
-            >
+            <p class="card-text text-truncate" style="max-height: 3.6em; overflow: hidden">
               {{ recipe.description }}
             </p>
           </div>
@@ -84,55 +52,34 @@
     </div>
 
     <!-- 没有搜索结果时的提示 -->
-    <p
-      v-if="recipes.length === 0"
-      style="margin-top: 10%; font-size: 40px; font-style: italic"
-    >
+    <p v-if="recipes.length === 0" style="margin-top: 10%; font-size: 40px; font-style: italic">
       No Recipes Found
     </p>
 
     <!-- 分页控制 -->
     <div v-if="recipes.length > 0" style="margin-top: 30px">
-      <button
-        :class="{
-          'btn btn-outline-success': currentPage > 0,
-          'btn btn-outline-secondary disabled': currentPage === 0,
-        }"
-        type="button"
-        @click="goToPreviousPage"
-      >
+      <button :class="{
+        'btn btn-outline-success': currentPage > 0,
+        'btn btn-outline-secondary disabled': currentPage === 0,
+      }" type="button" @click="goToPreviousPage">
         «
       </button>
       <span>&nbsp; Page {{ currentPage }} of {{ totalPages }}&nbsp;</span>
-      <button
-        :class="{
-          'btn btn-outline-success': currentPage < totalPages - 1,
-          'btn btn-outline-secondary disabled': currentPage === totalPages - 1,
-        }"
-        type="button"
-        @click="goToNextPage"
-      >
+      <button :class="{
+        'btn btn-outline-success': currentPage < totalPages - 1,
+        'btn btn-outline-secondary disabled': currentPage === totalPages - 1,
+      }" type="button" @click="goToNextPage">
         »
       </button>
       <!-- 每页显示数量控制 -->
-      <div
-        v-if="recipes.length > 0"
-        style="text-align: center; margin-top: 10px"
-      >
-        <select
-          id="pageSize"
-          v-model="pageSize"
-          style="width: auto; display: inline-block; font-size: small"
-          class="custom-select-no-arrow"
-          @change="updatePageSize"
-        >
+      <div v-if="recipes.length > 0" style="text-align: center; margin-top: 10px">
+        <select id="pageSize" v-model="pageSize" style="width: auto; display: inline-block; font-size: small"
+          class="custom-select-no-arrow" @change="updatePageSize">
           <option v-for="size in [8, 12, 16]" :key="size" :value="size">
             {{ size }}
           </option>
         </select>
-        <label for="pageSize" style="font-size: small; display: inline-block"
-          >&nbsp;per page</label
-        >
+        <label for="pageSize" style="font-size: small; display: inline-block">&nbsp;per page</label>
       </div>
     </div>
   </div>
@@ -163,7 +110,7 @@ const searchRecipes = async () => {
     pageSize: pageSize.value,
   };
   try {
-    const data = await $fetch('http://localhost:8080/recipe/search', {
+    const data = await $fetch('/api/recipe/search', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
