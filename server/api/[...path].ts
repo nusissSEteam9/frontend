@@ -6,6 +6,7 @@ export default defineEventHandler(async (event) => {
     // not proxying this request
     return event;
   }
+  const path = event.path.replace(/^\/api/, '');
   const target = joinURL(proxyUrl, path);
   return proxyRequest(event, target);
 });
