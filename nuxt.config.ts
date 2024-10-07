@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: ['@nuxt/eslint'],
   ssr: false,
   runtimeConfig: {
-    backendProxyUrl: 'http://localhost:8080/api/',
+    backendProxyUrl: process.env.NUXT_BACKEND_PROXY_URL,
   },
   css: ['@/assets/css/global.css', 'bootstrap-icons/font/bootstrap-icons.css'],
 });
