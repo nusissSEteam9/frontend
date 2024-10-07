@@ -113,7 +113,7 @@ const itemsPerPage = 8;
 
 const fetchUserProfile = async () => {
   const { data: userData } = await useFetch(
-    `http://localhost:8080/user/profile/${userId}`
+    `/api/user/profile/${userId}`
   );
   member.value = userData.value.member;
   publicRecipes.value = userData.value.publicRecipes || [];
