@@ -29,15 +29,15 @@
             </span>
           </td>
         </tr>
-        <!-- <tr v-if="recipe.member">
-                    <td style="font-size: 15px;">
-                        <b>Created By: </b>
-                        <NuxtLink :to="`/user/profile/${recipe.member.id}`">&nbsp;{{ recipe.member.username }}
-                        </NuxtLink>
-                        &nbsp;&nbsp; |
-                        &nbsp;&nbsp; Submitted on {{ recipe.submittedDate }}
-                    </td>
-                </tr>暂无member -->
+        <tr>
+          <td style="font-size: 15px;">
+            <b>Created By: </b>
+            <NuxtLink :to="`/user/profile/${createdByUserId}`">&nbsp;{{ createdBy }}
+            </NuxtLink>
+            &nbsp;&nbsp; |
+            &nbsp;&nbsp; Submitted on {{ recipe.submittedDate }}
+          </td>
+        </tr>
         <tr>
           <td>
             <img :src="`/images/${recipe.image}`" alt="Recipe Image" style="
@@ -186,12 +186,12 @@
         <div v-for="(review, index) in reviews" :key="index" class="card mt-2">
           <div class="card-body">
             <div class="user-profile" style="display: flex; justify-content: space-between">
-              <!-- <div class="user-profile" style="display: flex;">
-                                <img src="/user.png" style="width: 40px; height: 40px; margin-right: 8px;">
-                                <NuxtLink :to="`/user/profile/${review.member.id}`">
-                                    <h5 class="card-title">{{ review.member.username }}</h5>
-                                </NuxtLink>
-                            </div> 暂无member-->
+              <div class="user-profile" style="display: flex;">
+                <img src="/user.png" style="width: 40px; height: 40px; margin-right: 8px;">
+                <NuxtLink :to="`/user/profile/${review.memberId}`">
+                  <h5 class="card-title">{{ review.memberUsername }}</h5>
+                </NuxtLink>
+              </div>
             </div>
             <div class="star-rating" style="margin-left: 48px">
               <span v-for="i in 5" :key="i">
@@ -202,7 +202,7 @@
               &nbsp;{{ review.reviewDate }}
             </div>
             <br />
-            <p class="card-text" style="margin-left: 48px">
+            <p class="card-text" style="margin-left: 48px;">
               {{ review.comment }}
             </p>
           </div>
@@ -223,13 +223,17 @@ const recipeId = route.params.id;
 const recipe = ref({});
 const reviews = ref([]);
 const isSaved = ref(false); // 假设从API得知用户是否已保存此食谱
+const createdBy = ref('');
+const createdByUserId = ref(null);
 
 const fetchRecipeDetails = async () => {
   const { data: recipeData } = await useFetch(
     `/api/recipe/detail/${recipeId}`
   );
-  recipe.value = recipeData.value || {};
+  recipe.value = recipeData.value.recipe || {};
   reviews.value = recipeData.value.reviews || [];
+  createdBy.value = recipeData.value.createdBy || 'Unknown';
+  createdByUserId.value = recipeData.value.createdByUserId || null;
 };
 
 onMounted(() => {
