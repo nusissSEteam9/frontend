@@ -52,40 +52,17 @@
 </template>
 <script setup>
 import { ref } from 'vue';
-
+const auth = useAuth();
 const username = ref('');
 const password = ref('');
 const errorMessage = ref('');
 
 const handleSubmit = async () => {
   try {
-    const response = await $fetch('http://localhost:8080/user/login', {
-      method: 'POST',
-      body: {
-        username: username.value,
-        password: password.value,
-      },
-      credentials: 'include',
-    });
-    // Handle successful login
-    getSessionInfo();
-    console.log(response);
-    window.location.href = '/';
+    await auth.login(username.value, password.value);
+    router.push('/');
   } catch (error) {
-    errorMessage.value = 'Invalid username or password';
-    console.error('Error logging in:', error);
-  }
-};
-
-const getSessionInfo = async () => {
-  try {
-    const response = await $fetch('http://localhost:8080/user/sessionInfo', {
-      method: 'GET',
-      credentials: 'include',
-    });
-    console.log(response);
-  } catch (error) {
-    console.error('Error getting session info:', error);
+    errorMessage.value = error.response.data.message;
   }
 };
 </script>

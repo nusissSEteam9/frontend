@@ -27,6 +27,7 @@ export const useAuth = () => {
           'Content-Type': 'application/json',
         },
         body: { username, password },
+        credentials: 'include',
         // To capture headers, use `fetch` directly
         onResponse({ request, response }) {
           const authHeader = response.headers.get('Authorization');
