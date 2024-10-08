@@ -54,23 +54,23 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <template v-if="!isAdmin">
-                <nuxt-link class="dropdown-item" to="/user/myProfile"
+                <nuxt-link class="dropdown-item" to="/member/myProfile"
                   >My Profile</nuxt-link
                 >
                 <div class="dropdown-divider" />
-                <nuxt-link class="dropdown-item" to="/user/member/myRecipeList"
+                <nuxt-link class="dropdown-item" to="/member/myRecipeList"
                   >My Recipes</nuxt-link
                 >
                 <div class="dropdown-divider" />
-                <nuxt-link class="dropdown-item" to="/user/member/savedList"
+                <nuxt-link class="dropdown-item" to="/member/savedList"
                   >Saved Recipes</nuxt-link
                 >
                 <div class="dropdown-divider" />
-                <nuxt-link class="dropdown-item" to="/user/member/myReview"
+                <nuxt-link class="dropdown-item" to="/member/myReview"
                   >My Reviews</nuxt-link
                 >
                 <div class="dropdown-divider" />
-                <nuxt-link class="dropdown-item" to="/user/shoppingList/view"
+                <nuxt-link class="dropdown-item" to="/member/shoppingList/view"
                   >Shopping List</nuxt-link
                 >
                 <div class="dropdown-divider" />
