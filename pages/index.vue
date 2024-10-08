@@ -87,7 +87,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-
+const  route  = useRoute();
+const query = route.query;
+console.log(query);
 const searchQuery = ref('');
 const searchType = ref('');
 const filters = ref({
