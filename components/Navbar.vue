@@ -2,113 +2,57 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <nuxt-link class="navbar-brand" to="/">Healthier Recipes</nuxt-link>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon" />
       </button>
       <div id="navbarSupportedContent" class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto justify-content-center">
-          <li
-            v-for="(item, index) in menuItems"
-            :key="index"
-            class="nav-item dropdown"
-          >
-            <a
-              class="nav-link dropdown-toggle"
-              data-bs-toggle="dropdown"
-              role="button"
-              aria-haspopup="true"
-              aria-expanded="false"
-              >{{ item.title }}</a
-            >
+          <li v-for="(item, index) in menuItems" :key="index" class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+              aria-expanded="false">{{ item.title }}</a>
             <div class="dropdown-menu">
-              <nuxt-link
-                v-for="(subItem, subIndex) in item.subItems"
-                :key="subIndex"
-                class="dropdown-item"
-                :to="subItem.link"
-                >{{ subItem.name }}</nuxt-link
-              >
-              <div
-                v-if="subIndex < item.subItems.length - 1"
-                class="dropdown-divider"
-              />
+              <nuxt-link v-for="(subItem, subIndex) in item.subItems" :key="subIndex" class="dropdown-item"
+                :to="subItem.link">{{ subItem.name }}</nuxt-link>
+              <div v-if="subIndex < item.subItems.length - 1" class="dropdown-divider" />
             </div>
           </li>
           <li class="nav-item dropdown">
-            <a
-              id="navbarDropdown"
-              class="nav-link dropdown-toggle"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
+            <a id="navbarDropdown" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
               <i class="bi bi-person-circle" style="font-size: 18px" />
 
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <template v-if="!isAdmin">
-                <nuxt-link class="dropdown-item" to="/user/myProfile"
-                  >My Profile</nuxt-link
-                >
+                <nuxt-link class="dropdown-item" to="/member/myProfile">My Profile</nuxt-link>
                 <div class="dropdown-divider" />
-                <nuxt-link class="dropdown-item" to="/user/member/myRecipeList"
-                  >My Recipes</nuxt-link
-                >
+                <nuxt-link class="dropdown-item" to="/member/myRecipeList">My Recipes</nuxt-link>
                 <div class="dropdown-divider" />
-                <nuxt-link class="dropdown-item" to="/user/member/savedList"
-                  >Saved Recipes</nuxt-link
-                >
+                <nuxt-link class="dropdown-item" to="/member/savedList">Saved Recipes</nuxt-link>
                 <div class="dropdown-divider" />
-                <nuxt-link class="dropdown-item" to="/user/member/myReview"
-                  >My Reviews</nuxt-link
-                >
+                <nuxt-link class="dropdown-item" to="/member/myReview">My Reviews</nuxt-link>
                 <div class="dropdown-divider" />
-                <nuxt-link class="dropdown-item" to="/user/shoppingList/view"
-                  >Shopping List</nuxt-link
-                >
+                <nuxt-link class="dropdown-item" to="/member/shoppingList/view">Shopping List</nuxt-link>
                 <div class="dropdown-divider" />
               </template>
               <template v-if="isAdmin">
-                <nuxt-link class="dropdown-item" to="/user/admin/dashboard"
-                  >Dashboard</nuxt-link
-                >
+                <nuxt-link class="dropdown-item" to="/user/admin/dashboard">Dashboard</nuxt-link>
                 <div class="dropdown-divider" />
-                <nuxt-link class="dropdown-item" to="/user/admin/memberManage"
-                  >Manage Members</nuxt-link
-                >
+                <nuxt-link class="dropdown-item" to="/user/admin/memberManage">Manage Members</nuxt-link>
                 <div class="dropdown-divider" />
-                <nuxt-link class="dropdown-item" to="/user/admin/memberReport"
-                  >Member Reports</nuxt-link
-                >
+                <nuxt-link class="dropdown-item" to="/user/admin/memberReport">Member Reports</nuxt-link>
                 <div class="dropdown-divider" />
-                <nuxt-link class="dropdown-item" to="/user/admin/recipeReport"
-                  >Recipe Reports</nuxt-link
-                >
+                <nuxt-link class="dropdown-item" to="/user/admin/recipeReport">Recipe Reports</nuxt-link>
                 <div class="dropdown-divider" />
-                <nuxt-link
-                  class="dropdown-item"
-                  to="/user/admin/generateCsvReport"
-                  >Generate Csv</nuxt-link
-                >
+                <nuxt-link class="dropdown-item" to="/user/admin/generateCsvReport">Generate Csv</nuxt-link>
                 <div class="dropdown-divider" />
               </template>
               <template v-if="isLoggedIn">
-                <nuxt-link class="dropdown-item" to="/user/logout"
-                  >Logout</nuxt-link
-                >
+                <nuxt-link class="dropdown-item" to="/user/logout">Logout</nuxt-link>
               </template>
               <template v-else>
-                <nuxt-link class="dropdown-item" to="/user/login"
-                  >Login</nuxt-link
-                >
+                <nuxt-link class="dropdown-item" to="/user/login">Login</nuxt-link>
               </template>
             </div>
           </li>
@@ -213,41 +157,41 @@ const isLoggedIn = ref(false); // Replace with actual logic to determine if the 
 
 <style scoped>
 .nav-item {
-    position: relative;
+  position: relative;
 }
 
 .navbar-collapse {
-    justify-content: center;
+  justify-content: center;
 }
 
 .no-caret .dropdown-toggle::after {
-    display: none;
+  display: none;
 }
 
 .dropdown-menu {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .nav-item:hover .dropdown-menu {
-    display: block;
-    opacity: 1;
+  display: block;
+  opacity: 1;
 }
 
 .nav-item a:hover {
-    background-color: #4cae4c;
-    color: white;
-    transition: background-color 0.3s ease;
+  background-color: #4cae4c;
+  color: white;
+  transition: background-color 0.3s ease;
 }
 
 .dropdown-submenu {
-    position: relative;
+  position: relative;
 }
 
 .dropdown-submenu .dropdown-menu {
-    top: 0;
-    left: 100%;
-    margin-top: -1px;
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
 }
 </style>

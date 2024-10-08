@@ -87,9 +87,8 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-const  route  = useRoute();
-const query = route.query;
-console.log(query);
+import { useRoute } from 'vue-router';
+
 const searchQuery = ref('');
 const searchType = ref('');
 const filters = ref({
@@ -100,6 +99,7 @@ const recipes = ref([]);
 const currentPage = ref(0);
 const totalPages = ref(1);
 const pageSize = ref(8);
+const route = useRoute();
 
 // 从API获取数据
 const searchRecipes = async () => {
@@ -114,9 +114,6 @@ const searchRecipes = async () => {
   try {
     const data = await $fetch('/api/recipe/search', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
       body: new URLSearchParams(params),
     });
     console.log(data);
@@ -128,8 +125,26 @@ const searchRecipes = async () => {
 };
 
 onMounted(() => {
-  searchRecipes();
+  const query = route.query.query || '';
+  if (query) {
+    searchQuery.value = query;
+    console.log('Searching for:', searchQuery.value);
+    searchRecipes();
+  } else {
+    searchRecipes();
+  }
 });
+
+watch(
+  () => route.query.query,
+  (newQuery) => {
+    if (newQuery) {
+      searchQuery.value = newQuery;
+      console.log('URL changed, searching for:', searchQuery.value);
+      searchRecipes();
+    }
+  }
+);
 
 // 过滤菜单的显示位置
 const toggleMenu = () => {

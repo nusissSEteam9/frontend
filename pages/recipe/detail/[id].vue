@@ -228,7 +228,7 @@ const createdByUserId = ref(null);
 
 const fetchRecipeDetails = async () => {
   const { data: recipeData } = await useFetch(
-    `/api/recipe/detail/${recipeId}`
+    `/api/recipe/detail/${recipeId}`,
   );
   recipe.value = recipeData.value.recipe || {};
   reviews.value = recipeData.value.reviews || [];
