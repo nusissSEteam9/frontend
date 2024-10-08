@@ -5,9 +5,8 @@ export default defineNuxtConfig({
   modules: ['@nuxt/eslint', '@pinia/nuxt'],
   ssr: false,
   runtimeConfig: {
-    backendProxyUrl: process.env.NUXT_BACKEND_PROXY_URL,
     public: {
-      apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
+      backendProxyUrl: process.env.NUXT_BACKEND_PROXY_URL,
     },
   },
   pinia: {

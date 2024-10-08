@@ -21,7 +21,7 @@ export const useAuth = () => {
   const login = async (username: string, password: string): Promise<void> => {
     try {
       const response = await $fetch<LoginResponse>('/auth/login', {
-        baseURL: config.public.apiBaseUrl,
+        baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export const useAuth = () => {
   ): Promise<void> => {
     try {
       const response = await $fetch<RegisterResponse>('/auth/register', {
-        baseURL: config.public.apiBaseUrl,
+        baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -73,21 +73,9 @@ export const useAuth = () => {
     }
   };
 
-  const logout = async (): Promise<void> => {
-    try {
-      await $fetch('/auth/logout', {
-        baseURL: config.public.apiBaseUrl,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    } catch (error) {
-      console.error('Logout failed:', error);
-    } finally {
-      authStore.logout();
-      navigateTo('/login');
-    }
+  const logout = () => {
+    authStore.logout();
+    navigateTo('/login');
   };
 
   const fetchUser = async (): Promise<void> => {

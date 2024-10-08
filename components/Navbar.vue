@@ -34,12 +34,12 @@
                 :key="subIndex"
                 class="dropdown-item"
                 :to="subItem.link"
-                >{{ subItem.name }}</nuxt-link
-              >
-              <div
-                v-if="subIndex < item.subItems.length - 1"
-                class="dropdown-divider"
-              />
+                >{{ subItem.name }}
+                <div
+                  v-if="subIndex < item.subItems.length - 1"
+                  class="dropdown-divider"
+                />
+              </nuxt-link>
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -51,7 +51,6 @@
               aria-expanded="false"
             >
               <i class="bi bi-person-circle" style="font-size: 18px" />
-
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <template v-if="!isAdmin">
@@ -213,41 +212,41 @@ const isLoggedIn = ref(false); // Replace with actual logic to determine if the 
 
 <style scoped>
 .nav-item {
-    position: relative;
+  position: relative;
 }
 
 .navbar-collapse {
-    justify-content: center;
+  justify-content: center;
 }
 
 .no-caret .dropdown-toggle::after {
-    display: none;
+  display: none;
 }
 
 .dropdown-menu {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .nav-item:hover .dropdown-menu {
-    display: block;
-    opacity: 1;
+  display: block;
+  opacity: 1;
 }
 
 .nav-item a:hover {
-    background-color: #4cae4c;
-    color: white;
-    transition: background-color 0.3s ease;
+  background-color: #4cae4c;
+  color: white;
+  transition: background-color 0.3s ease;
 }
 
 .dropdown-submenu {
-    position: relative;
+  position: relative;
 }
 
 .dropdown-submenu .dropdown-menu {
-    top: 0;
-    left: 100%;
-    margin-top: -1px;
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
 }
 </style>
