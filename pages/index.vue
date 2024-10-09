@@ -73,12 +73,6 @@
               alt="Recipe Image"
               style="width: 100%; height: 200px; object-fit: cover"
             />
-            <img
-              class="card-img-top"
-              :src="`/images/${recipe.image}`"
-              alt="Recipe Image"
-              style="width: 100%; height: 200px; object-fit: cover"
-            />
           </NuxtLink>
           <div class="card-body" style="min-height: 105px">
             <h5 class="card-title">

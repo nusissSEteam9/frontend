@@ -7,6 +7,7 @@ interface User {
   id: number;
   username: string;
   email: string;
+  userType: string;
   // Add other user fields as needed
 }
 
