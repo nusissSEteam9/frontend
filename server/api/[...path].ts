@@ -5,13 +5,16 @@ export default defineEventHandler(async (event) => {
   // check if path has prefix /api
   console.log('event.path', event.path);
 
+  const cookies = parseCookies(event);
+  const token = cookies?.token;
+
   if (event.path.startsWith('/api')) {
-    const cookies = parseCookies(event);
-    const token = cookies?.token;
-    if (!token) {
+    if (!token && !event.path.startsWith('/api/auth')) {
       event.node.res.statusCode = 401;
       return { message: 'Unauthorized' };
     }
+    // if there is a token, add it to the Authorization header
+    // if it is a request to /api/auth, backend will not require a token so blank token is fine
     const path = event.path.replace(/^\/api/, '');
     const target = joinURL(proxyUrl, path);
     console.log('target', target);

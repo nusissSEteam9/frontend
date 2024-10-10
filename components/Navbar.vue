@@ -108,6 +108,10 @@
                 <nuxt-link class="dropdown-item" to="/user/login"
                   >Login</nuxt-link
                 >
+                <div class="dropdown-divider"></div>
+                <nuxt-link class="dropdown-item" to="/user/register"
+                  >Register</nuxt-link
+                >
               </template>
             </div>
           </li>
