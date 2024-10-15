@@ -3,14 +3,11 @@ import { useAuthStore } from '~/stores/auth';
 import { useRuntimeConfig, navigateTo } from '#app';
 
 interface LoginResponse {
-  // Define the structure based on your backend response
-  // Assuming the response body contains role and message
   message: string;
 }
 
 interface RegisterResponse {
   message: string;
-  newMember?: any;
   verifyCode?: string;
 }
 
@@ -18,9 +15,14 @@ export const useAuth = () => {
   const authStore = useAuthStore();
   const config = useRuntimeConfig();
 
+  /**
+   * Handles user login.
+   * @param username - The username of the user.
+   * @param password - The password of the user.
+   */
   const login = async (username: string, password: string): Promise<void> => {
     try {
-      const response = await $fetch<LoginResponse>('/auth/login', {
+      await $fetch<LoginResponse>('/auth/login', {
         baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
@@ -28,7 +30,6 @@ export const useAuth = () => {
         },
         body: { username, password },
         credentials: 'include',
-        // To capture headers, use `fetch` directly
         onResponse({ request, response }) {
           const authHeader = response.headers.get('Authorization');
           if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -37,21 +38,68 @@ export const useAuth = () => {
           }
         },
       });
-      // Optionally, you can parse the message or fetch user details
-      // For simplicity, redirecting to home
+      // Redirect to home after successful login
       navigateTo('/');
     } catch (error: any) {
       throw error.data?.message || 'An error occurred during login.';
     }
   };
 
-  const register = async (
+  /**
+   * Handles user registration.
+   * @param username - The desired username.
+   * @param email - The user's email address.
+   * @param password - The desired password.
+   * @returns An object indicating if verification is required and any messages.
+   */
+  const register = async (form: {
+    username: string;
+    email: string;
+    password: string;
+  }): Promise<{
+    message: string;
+    code: string;
+  }> => {
+    try {
+      const res = await $fetch<RegisterResponse>('/auth/register', {
+        baseURL: config.public.backendProxyUrl,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: form,
+        credentials: 'include',
+        onResponse({ request, response }) {
+          const authHeader = response.headers.get('Authorization');
+          if (authHeader && authHeader.startsWith('Bearer ')) {
+            const token = authHeader.split(' ')[1];
+            authStore.setToken(token);
+          }
+        },
+      });
+      return {
+        message: res.message,
+        code: res.verifyCode || '',
+      };
+    } catch (error: any) {
+      throw error.data?.message || 'An error occurred during registration.';
+    }
+  };
+
+  /**
+   * Handles email verification.
+   * @param username - The username of the user.
+   * @param email - The user's email address.
+   * @param password - The user's password.
+   * @returns A message indicating the result of verification.
+   */
+  const verifyEmail = async (
     username: string,
     email: string,
     password: string
-  ): Promise<void> => {
+  ): Promise<string> => {
     try {
-      const response = await $fetch<RegisterResponse>('/auth/register', {
+      const token = await $fetch<string>('/auth/verifyCode/success', {
         baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
@@ -66,19 +114,29 @@ export const useAuth = () => {
           }
         },
       });
-      // Optionally, you can handle verification steps
-      // For simplicity, redirecting to login
-      navigateTo('/login');
+      // Assuming the backend returns the token directly
+      // Redirect to home after successful verification
+      navigateTo('/');
+      return 'Email verified and registration successful.';
     } catch (error: any) {
-      throw error.data?.message || 'An error occurred during registration.';
+      throw (
+        error.data?.message || 'An error occurred during email verification.'
+      );
     }
   };
 
+  /**
+   * Logs out the user.
+   */
   const logout = () => {
     authStore.logout();
     navigateTo('/login');
   };
 
+  /**
+   * Fetches user details.
+   * @todo Implement this based on your backend's user details endpoint.
+   */
   const fetchUser = async (): Promise<void> => {
     // Implement fetching user details if your backend provides an endpoint
     // Example:
@@ -86,5 +144,5 @@ export const useAuth = () => {
     // authStore.setUser(user)
   };
 
-  return { login, register, logout, fetchUser };
+  return { login, register, verifyEmail, logout, fetchUser };
 };

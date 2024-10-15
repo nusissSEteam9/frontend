@@ -100,13 +100,17 @@
                 <div class="dropdown-divider" />
               </template>
               <template v-if="isLoggedIn">
-                <nuxt-link class="dropdown-item" to="/user/logout"
+                <nuxt-link class="dropdown-item" @click="logout"
                   >Logout</nuxt-link
                 >
               </template>
               <template v-else>
                 <nuxt-link class="dropdown-item" to="/user/login"
                   >Login</nuxt-link
+                >
+                <div class="dropdown-divider"></div>
+                <nuxt-link class="dropdown-item" to="/user/register"
+                  >Register</nuxt-link
                 >
               </template>
             </div>
@@ -119,7 +123,12 @@
 
 <script setup>
 import { reactive } from 'vue';
-
+import { useAuthStore } from '~/stores/auth';
+const authStore = useAuthStore();
+const logout = () => {
+  useAuthStore().logout();
+  navigateTo('/user/login');
+};
 const menuItems = reactive([
   {
     title: 'Cuisine',
@@ -206,8 +215,8 @@ const menuItems = reactive([
     ],
   },
 ]);
+const isLoggedIn = computed(() => authStore.token !== null);
 const isAdmin = ref(false); // Replace with actual logic to determine if the user is an admin
-const isLoggedIn = ref(false); // Replace with actual logic to determine if the user is logged in
 </script>
 
 <style scoped>
