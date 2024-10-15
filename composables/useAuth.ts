@@ -22,7 +22,7 @@ export const useAuth = () => {
    */
   const login = async (username: string, password: string): Promise<void> => {
     try {
-      const response = await $fetch<LoginResponse>('/auth/login', {
+      await $fetch<LoginResponse>('/auth/login', {
         baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
@@ -54,33 +54,30 @@ export const useAuth = () => {
    */
   const register = async (
     username: string,
-    email: string,
+    email: string | null,
     password: string
-  ): Promise<{ requiresVerification: boolean; message: string }> => {
+  ): Promise<{
+    message: string;
+    code: string;
+  }> => {
+    console.log('register', username, email, password);
     try {
-      const response = await $fetch<RegisterResponse>('/auth/register', {
+      await $fetch<RegisterResponse>('/auth/register', {
         baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: { username, email, password },
+        credentials: 'include',
+        onResponse({ request, response }) {
+          const authHeader = response.headers.get('Authorization');
+          if (authHeader && authHeader.startsWith('Bearer ')) {
+            const token = authHeader.split(' ')[1];
+            authStore.setToken(token);
+          }
+        },
       });
-
-      if (response.verifyCode) {
-        // Verification is required
-        return {
-          requiresVerification: true,
-          message: response.message,
-        };
-      } else {
-        // Registration successful without verification
-        navigateTo('/login');
-        return {
-          requiresVerification: false,
-          message: response.message,
-        };
-      }
     } catch (error: any) {
       throw error.data?.message || 'An error occurred during registration.';
     }

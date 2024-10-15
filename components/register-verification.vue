@@ -1,55 +1,61 @@
 <template>
-  <div class="flex-box">
-    <div class="form-group">
-      <label for="code1" class="label-style">Verification:</label>
-      <div class="code-inputs">
-        <input
-          type="text"
-          v-model="code1"
-          maxlength="1"
-          class="code-box"
-          autofocus
-          @input="focusNext(1)"
-          ref="input1"
-        />
-        <input
-          type="text"
-          v-model="code2"
-          maxlength="1"
-          class="code-box"
-          @input="focusNext(2)"
-          ref="input2"
-        />
-        <input
-          type="text"
-          v-model="code3"
-          maxlength="1"
-          class="code-box"
-          @input="focusNext(3)"
-          ref="input3"
-        />
-        <input
-          type="text"
-          v-model="code4"
-          maxlength="1"
-          class="code-box"
-          @input="focusNext(4)"
-          ref="input4"
-        />
+  <form class="container" @submit="verifyCode">
+    <h2>Email Verification</h2>
+    <div class="flex-box">
+      <div class="form-group">
+        <div class="code-inputs">
+          <input
+            type="text"
+            v-model="code1"
+            maxlength="1"
+            class="code-box"
+            autofocus
+            @input="focusNext(1)"
+            ref="input1"
+          />
+          <input
+            type="text"
+            v-model="code2"
+            maxlength="1"
+            class="code-box"
+            @input="focusNext(2)"
+            ref="input2"
+          />
+          <input
+            type="text"
+            v-model="code3"
+            maxlength="1"
+            class="code-box"
+            @input="focusNext(3)"
+            ref="input3"
+          />
+          <input
+            type="text"
+            v-model="code4"
+            maxlength="1"
+            class="code-box"
+            @input="focusNext(4)"
+            ref="input4"
+          />
+        </div>
       </div>
-      <input type="hidden" v-model="verifyCode" />
     </div>
-  </div>
+  </form>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue';
-
+const props = defineProps({
+  verifyCode: {
+    type: Function,
+    required: true,
+  },
+});
 const code1 = ref('');
 const code2 = ref('');
 const code3 = ref('');
 const code4 = ref('');
-const verifyCode = ref(''); // This should be set with the actual verification code
+const allCodes = ref('');
 
 const input1 = ref(null);
 const input2 = ref(null);
@@ -58,7 +64,7 @@ const input4 = ref(null);
 
 // Focus the first input on mount
 watch([code1, code2, code3, code4], () => {
-  verifyCode.value = `${code1.value}${code2.value}${code3.value}${code4.value}`;
+  allCodes.value = `${code1.value}${code2.value}${code3.value}${code4.value}`;
 });
 
 const focusNext = (index) => {
@@ -82,6 +88,8 @@ const focusNext = (index) => {
 .form-group {
   display: flex;
   align-items: center;
+  width: 400px; /* Adjust as needed */
+  padding: 20px;
   background-color: #ffffff; /* White background for the form */
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -102,10 +110,10 @@ const focusNext = (index) => {
 }
 
 .code-box {
-  width: 2rem;
-  height: 2rem;
+  width: 60px; /* Increased width for better usability */
+  height: 60px;
   text-align: center;
-  font-size: 1rem;
+  font-size: 24px;
   border: 2px solid #cccccc;
   border-radius: 4px;
   transition:

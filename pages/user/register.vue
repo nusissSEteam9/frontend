@@ -1,84 +1,85 @@
 <template>
-  <div class="container">
-    <h2>Register New Account</h2>
-    <br />
-    <form id="registerForm" @submit.prevent="handleSubmit">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="username">Username:</label>
-          <input
-            id="username"
-            v-model="form.username"
-            type="text"
-            placeholder="Enter username"
-            @blur="checkIfUsernameAvailable"
-            @input="validateUsername"
-            required
-          />
-          <span v-if="errors.username" class="error">{{
-            errors.username
-          }}</span>
-          <span v-if="errors.usernameAvailability" class="error">
-            {{ errors.usernameAvailability }}
-          </span>
+  <template v-if="!reqireEmailVerification">
+    <div class="container">
+      <h2>Register New Account</h2>
+      <br />
+      <form id="registerForm" @submit.prevent="handleSubmit">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="username">Username:</label>
+            <input
+              id="username"
+              v-model="form.username"
+              type="text"
+              placeholder="Enter username"
+              @blur="checkIfUsernameAvailable"
+              @input="validateUsername"
+              required
+            />
+            <span v-if="errors.username" class="error">{{
+              errors.username
+            }}</span>
+            <span v-if="errors.usernameAvailability" class="error">
+              {{ errors.usernameAvailability }}
+            </span>
+          </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input
+              id="password"
+              v-model="form.password"
+              type="password"
+              placeholder="Enter password"
+              @blur="validatePassword"
+              required
+            />
+            <span v-if="errors.password" class="error">{{
+              errors.password
+            }}</span>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
-          <input
-            id="password"
-            v-model="form.password"
-            type="password"
-            placeholder="Enter password"
-            @blur="validatePassword"
-            required
-          />
-          <span v-if="errors.password" class="error">{{
-            errors.password
-          }}</span>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input
+              id="email"
+              v-model="form.email"
+              type="email"
+              placeholder="Enter email"
+              @blur="validateEmail"
+              required
+            />
+            <span v-if="errors.email" class="error">{{ errors.email }}</span>
+          </div>
         </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input
-            id="email"
-            v-model="form.email"
-            type="email"
-            placeholder="Enter email"
-            @blur="validateEmail"
-            required
-          />
-          <span v-if="errors.email" class="error">{{ errors.email }}</span>
+        <div class="form-row">
+          <button type="submit" :disabled="isSubmitting">
+            {{ isSubmitting ? 'Registering...' : 'Register' }}
+          </button>
+          <button type="button" class="button-right" @click.prevent="goToLogin">
+            Go back Login
+          </button>
         </div>
+      </form>
+      <div v-if="successMessage" class="success">
+        {{ successMessage }}
       </div>
-      <div class="form-row">
-        <button type="submit" :disabled="isSubmitting">
-          {{ isSubmitting ? 'Registering...' : 'Register' }}
-        </button>
-
-        <button type="button" class="button-right" @click.prevent="goToLogin">
-          Go back Login
-        </button>
+      <div v-if="submissionError" class="error">
+        {{ submissionError }}
       </div>
-    </form>
-    <div v-if="successMessage" class="success">
-      {{ successMessage }}
     </div>
-    <div v-if="submissionError" class="error">
-      {{ submissionError }}
-    </div>
-    <template v-if="hasEmail">
-      <register-verification></register-verification>
-    </template>
-  </div>
+  </template>
+  <template v-if="reqireEmailVerification">
+    <register-verification verify-code="verify"></register-verification>
+  </template>
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue';
 
 const router = useRouter();
-const hasEmail = ref(false);
-
+const reqireEmailVerification = ref(false);
+const verifyCode = ref('');
 const form = reactive({
   username: '',
   password: '',
@@ -115,6 +116,11 @@ const validatePassword = () => {
 };
 
 const validateEmail = () => {
+  // emtpy email is allowed
+  if (!form.email) {
+    errors.email = '';
+    return true;
+  }
   const emailRegex = /\S+@\S+\.\S+/;
   if (!emailRegex.test(form.email)) {
     errors.email = 'Please enter a valid email address.';
@@ -165,19 +171,19 @@ const handleSubmit = async () => {
   successMessage.value = '';
 
   try {
-    const response = await $fetch('/api/user/register', {
-      method: 'POST',
-      body: {
-        username: form.username,
-        password: form.password,
-        email: form.email,
-      },
+    const response = await useAuth().register({
+      username: form.username,
+      password: form.password,
+      email: form.email,
     });
-    successMessage.value = 'Registration successful! You can now log in.';
-    // Optionally, redirect to login after a delay
-    setTimeout(() => {
-      router.push('/user/login');
-    }, 3000);
+    if (response.code) {
+      verifyCode.value = response.code;
+      reqireEmailVerification.value = true;
+    } else {
+      successMessage.value =
+        'Registration successful. Please check your email for verification code.';
+      navigateTo('/');
+    }
   } catch (error) {
     console.error('Error during registration:', error);
     submissionError.value = 'Registration failed. Please try again.';
