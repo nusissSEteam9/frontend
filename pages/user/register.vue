@@ -182,11 +182,6 @@ const handleSubmit = async () => {
       navigateTo('/');
     }
   } catch (error) {
-    if (error.name === 'AlreadyLoggedInError') {
-      successMessage.value = 'You are already logged in.';
-      navigateTo('/');
-      return;
-    }
     console.error('Error during registration:', error);
     submissionError.value = 'Registration failed. Please try again.';
   } finally {
