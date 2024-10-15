@@ -52,23 +52,22 @@ export const useAuth = () => {
    * @param password - The desired password.
    * @returns An object indicating if verification is required and any messages.
    */
-  const register = async (
-    username: string,
-    email: string | null,
-    password: string
-  ): Promise<{
+  const register = async (form: {
+    username: string;
+    email: string;
+    password: string;
+  }): Promise<{
     message: string;
     code: string;
   }> => {
-    console.log('register', username, email, password);
     try {
-      await $fetch<RegisterResponse>('/auth/register', {
+      const res = await $fetch<RegisterResponse>('/auth/register', {
         baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: { username, email, password },
+        body: form,
         credentials: 'include',
         onResponse({ request, response }) {
           const authHeader = response.headers.get('Authorization');
@@ -78,6 +77,10 @@ export const useAuth = () => {
           }
         },
       });
+      return {
+        message: res.message,
+        code: res.verifyCode || '',
+      };
     } catch (error: any) {
       throw error.data?.message || 'An error occurred during registration.';
     }

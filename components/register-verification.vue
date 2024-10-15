@@ -1,5 +1,5 @@
 <template>
-  <form class="container" @submit="verifyCode">
+  <form class="container" @submit="verify">
     <h2>Email Verification</h2>
     <div class="flex-box">
       <div class="form-group">
@@ -39,6 +39,21 @@
           />
         </div>
       </div>
+      <button
+        :disabled="allCodes.length < 4"
+        :style="{
+          backgroundColor: allCodes.length < 4 ? '#cccccc' : '#007bff',
+          borderColor: allCodes.length < 4 ? '#cccccc' : '#007bff',
+          width: '300px',
+          height: '60px',
+          marginTop: '20px',
+          fontSize: '20px',
+        }"
+        class="btn btn-primary"
+        type="submit"
+      >
+        Verify
+      </button>
     </div>
   </form>
 </template>
@@ -46,7 +61,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 const props = defineProps({
-  verifyCode: {
+  verify: {
     type: Function,
     required: true,
   },
@@ -83,6 +98,7 @@ const focusNext = (index) => {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .form-group {

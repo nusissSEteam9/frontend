@@ -47,7 +47,6 @@
               type="email"
               placeholder="Enter email"
               @blur="validateEmail"
-              required
             />
             <span v-if="errors.email" class="error">{{ errors.email }}</span>
           </div>
@@ -69,8 +68,8 @@
       </div>
     </div>
   </template>
-  <template v-if="reqireEmailVerification">
-    <register-verification verify-code="verify"></register-verification>
+  <template v-if="!reqireEmailVerification">
+    <register-verification :verify="verify"></register-verification>
   </template>
 </template>
 
@@ -79,7 +78,8 @@ import { reactive, ref } from 'vue';
 
 const router = useRouter();
 const reqireEmailVerification = ref(false);
-const verifyCode = ref('');
+const signupCode = ref('');
+
 const form = reactive({
   username: '',
   password: '',
@@ -171,17 +171,12 @@ const handleSubmit = async () => {
   successMessage.value = '';
 
   try {
-    const response = await useAuth().register({
-      username: form.username,
-      password: form.password,
-      email: form.email,
-    });
+    const response = await useAuth().register(toRaw(form));
     if (response.code) {
-      verifyCode.value = response.code;
+      signupCode.value = response.code;
       reqireEmailVerification.value = true;
     } else {
-      successMessage.value =
-        'Registration successful. Please check your email for verification code.';
+      successMessage.value = 'Registration successful. You are now logged in.';
       navigateTo('/');
     }
   } catch (error) {
@@ -191,7 +186,14 @@ const handleSubmit = async () => {
     isSubmitting.value = false;
   }
 };
-
+const verify = (code) => {
+  if (code === signupCode.value) {
+    successMessage.value = 'Verification successful.';
+    router.push('/');
+  } else {
+    submissionError.value = 'Verification code is incorrect. Please try again.';
+  }
+};
 const goToLogin = () => {
   router.push('/user/login');
 };
