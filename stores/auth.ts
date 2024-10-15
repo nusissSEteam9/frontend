@@ -27,6 +27,6 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = '';
     user.value = null;
   };
-
-  return { token, user, setToken, setUser, logout };
+  const isLoggedIn = computed(() => !!token.value);
+  return { isLoggedIn, token, user, setToken, setUser, logout };
 });

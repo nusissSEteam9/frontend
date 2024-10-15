@@ -215,7 +215,7 @@ const menuItems = reactive([
     ],
   },
 ]);
-const isLoggedIn = computed(() => authStore.token !== null);
+const isLoggedIn = computed(() => !!authStore.token);
 const isAdmin = ref(false); // Replace with actual logic to determine if the user is an admin
 </script>
 

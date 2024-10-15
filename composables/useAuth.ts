@@ -14,13 +14,17 @@ interface RegisterResponse {
 export const useAuth = () => {
   const authStore = useAuthStore();
   const config = useRuntimeConfig();
-
   /**
    * Handles user login.
    * @param username - The username of the user.
    * @param password - The password of the user.
    */
   const login = async (username: string, password: string): Promise<void> => {
+    if (authStore.isLoggedIn) {
+      const error = new Error('already logged in');
+      error.name = 'AlreadyLoggedInError';
+      throw error;
+    }
     try {
       await $fetch<LoginResponse>('/auth/login', {
         baseURL: config.public.backendProxyUrl,
@@ -93,19 +97,19 @@ export const useAuth = () => {
    * @param password - The user's password.
    * @returns A message indicating the result of verification.
    */
-  const verifyEmail = async (
-    username: string,
-    email: string,
-    password: string
-  ): Promise<string> => {
+  const verifyEmail = async (form: {
+    username: string;
+    email: string;
+    password: string;
+  }): Promise<string> => {
     try {
-      const token = await $fetch<string>('/auth/verifyCode/success', {
+      await $fetch<string>('/auth/verifyCode/success', {
         baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: { username, email, password },
+        body: form,
         onResponse({ request, response }) {
           const authHeader = response.headers.get('Authorization');
           if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -114,9 +118,7 @@ export const useAuth = () => {
           }
         },
       });
-      // Assuming the backend returns the token directly
-      // Redirect to home after successful verification
-      navigateTo('/');
+
       return 'Email verified and registration successful.';
     } catch (error: any) {
       throw (

@@ -51,7 +51,9 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+definePageMeta({
+  middleware: 'signin',
+});
 const auth = useAuth();
 const username = ref('');
 const password = ref('');
