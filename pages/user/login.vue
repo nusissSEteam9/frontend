@@ -74,11 +74,9 @@ const handleSubmit = async () => {
     errorMessage.value = error.response.data.message;
   }
 };
-const config = useRuntimeConfig();
-console.log(config.public.backendProxyUrl);
 const logout = () => {
   $fetch('/api/auth/logout', {
-    baseURL: config.public.backendProxyUrl,
+    baseURL: process.env.NUXT_BACKEND_PROXY_URL,
     onResponse: (message) => {
       console.log(message);
     },
