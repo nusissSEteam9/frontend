@@ -125,6 +125,7 @@
 import { reactive } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 const authStore = useAuthStore();
+const isLoggedIn = authStore.isLoggedIn;
 const logout = () => {
   useAuthStore().logout();
   navigateTo('/user/login');
@@ -215,7 +216,6 @@ const menuItems = reactive([
     ],
   },
 ]);
-const isLoggedIn = computed(() => !!authStore.token);
 const isAdmin = ref(false); // Replace with actual logic to determine if the user is an admin
 </script>
 
