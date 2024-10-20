@@ -70,7 +70,7 @@
                   >My Reviews</nuxt-link
                 >
                 <div class="dropdown-divider" />
-                <nuxt-link class="dropdown-item" to="/member/shoppingList/view"
+                <nuxt-link class="dropdown-item" to="/member/shoppingList"
                   >Shopping List</nuxt-link
                 >
                 <div class="dropdown-divider" />
