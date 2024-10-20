@@ -68,13 +68,15 @@
       </div>
     </div>
   </template>
-  <template v-if="!reqireEmailVerification">
+  <template v-if="reqireEmailVerification">
     <register-verification :verify="verify"></register-verification>
   </template>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+definePageMeta({
+  middleware: 'signin',
+});
 
 const router = useRouter();
 const reqireEmailVerification = ref(false);
@@ -189,7 +191,15 @@ const handleSubmit = async () => {
 const verify = (code) => {
   if (code === signupCode.value) {
     successMessage.value = 'Verification successful.';
-    router.push('/');
+    useAuth()
+      .verifyEmail(toRaw(form))
+      .then(() => {
+        navigateTo('/');
+      })
+      .catch((error) => {
+        console.error('Error during email verification:', error);
+        submissionError.value = 'Error: cannot create user. Please try again.';
+      });
   } else {
     submissionError.value = 'Verification code is incorrect. Please try again.';
   }

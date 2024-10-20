@@ -40,6 +40,13 @@
                       Register
                     </button>
                   </nuxt-link>
+                  <button
+                    type="button"
+                    @click.prevent="logout"
+                    class="btn btn-success btn-outline w-100"
+                  >
+                    logout
+                  </button>
                 </div>
               </fieldset>
             </form>
@@ -51,7 +58,9 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+definePageMeta({
+  middleware: 'signin',
+});
 const auth = useAuth();
 const username = ref('');
 const password = ref('');
@@ -64,6 +73,17 @@ const handleSubmit = async () => {
   } catch (error) {
     errorMessage.value = error.response.data.message;
   }
+};
+const config = useRuntimeConfig();
+console.log(config.public);
+const logout = () => {
+  $fetch('/auth/logout', {
+    baseURL: config.public.backendProxyUrl,
+    onResponse: (message) => {
+      console.log(message);
+    },
+    credentials: 'include',
+  });
 };
 </script>
 <style>

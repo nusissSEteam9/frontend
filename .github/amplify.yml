@@ -1,0 +1,25 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Installing Bun..."
+        - curl -fsSL https://bun.sh/install | bash
+        - export BUN_INSTALL="$HOME/.bun"
+        - export PATH="$BUN_INSTALL/bin:$PATH"
+        - echo "Bun installed successfully:"
+        - bun --version
+        - echo "Installing dependencies with Bun..."
+        - bun install
+    build:
+      commands:
+        - echo "Building the project with Bun..."
+        - bun run build
+  artifacts:
+    baseDirectory: .output/public
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - .bun/cache
+      - node_modules/**/*
