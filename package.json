@@ -2,6 +2,12 @@
   "name": "nuxt-app",
   "private": true,
   "type": "module",
+  "lint-staged": {
+    "*.{js,ts,vue,css,md,json,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
