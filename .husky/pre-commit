@@ -1,1 +1,2 @@
-bun test
+# .husky/pre-commit
+bunx lint-staged
