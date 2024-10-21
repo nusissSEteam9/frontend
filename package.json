@@ -17,7 +17,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@nuxt/eslint": "^0.5.7",
+    "@nuxt/eslint": "^0.6.0",
     "@pinia/nuxt": "^0.5.5",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
