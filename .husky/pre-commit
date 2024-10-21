@@ -1,2 +1,2 @@
 # .husky/pre-commit
-bunx lint-staged
+bunx lint-staged # lint-staged
