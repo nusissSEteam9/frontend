@@ -26,7 +26,7 @@ export const useAuth = () => {
       throw error;
     }
     try {
-      await $fetch<LoginResponse>('/auth/login', {
+      await $fetch<LoginResponse>('/api/auth/login', {
         baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
@@ -65,7 +65,7 @@ export const useAuth = () => {
     code: string;
   }> => {
     try {
-      const res = await $fetch<RegisterResponse>('/auth/register', {
+      const res = await $fetch<RegisterResponse>('/api/auth/register', {
         baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
