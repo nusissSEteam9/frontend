@@ -150,9 +150,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-
+import { useAuthStore } from '@/store/auth';
+const authStore = useAuthStore();
 const searchQuery = ref('');
 const searchType = ref('');
 const filters = ref({
@@ -179,7 +178,10 @@ const searchRecipes = async () => {
     const data = await $fetch('/api/recipe/search', {
       method: 'POST',
       body: new URLSearchParams(params),
-      baseURL: process.env.NUXT_BACKEND_PROXY_URL,
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
     });
     console.log(data);
     recipes.value = data.results;
