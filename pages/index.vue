@@ -179,6 +179,7 @@ const searchRecipes = async () => {
     const data = await $fetch('/api/recipe/search', {
       method: 'POST',
       body: new URLSearchParams(params),
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
     });
     console.log(data);
     recipes.value = data.results;
