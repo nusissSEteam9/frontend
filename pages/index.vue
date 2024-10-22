@@ -176,10 +176,9 @@ const searchRecipes = async () => {
     pageSize: pageSize.value,
   };
   try {
-    const data = await $fetch('/recipe/search', {
+    const data = await $fetch('/api/recipe/search', {
       method: 'POST',
       body: new URLSearchParams(params),
-      baseURL: useRuntimeConfig().public.backendProxyUrl,
     });
     console.log(data);
     recipes.value = data.results;
