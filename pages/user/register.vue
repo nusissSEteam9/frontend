@@ -12,7 +12,6 @@
               v-model="form.username"
               type="text"
               placeholder="Enter username"
-              @blur="checkIfUsernameAvailable"
               @input="validateUsername"
               required
             />
@@ -73,7 +72,7 @@
   </template>
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   middleware: 'signin',
 });
@@ -132,26 +131,6 @@ const validateEmail = () => {
   return true;
 };
 
-const checkIfUsernameAvailable = async () => {
-  if (!validateUsername()) return;
-
-  errors.usernameAvailability = '';
-  try {
-    const response = await $fetch('/api/user/checkIfUsernameAvailable', {
-      method: 'POST',
-      body: { username: form.username },
-    });
-    if (response.userAlrExists) {
-      errors.usernameAvailability =
-        'The username is taken, please enter another username.';
-    }
-  } catch (error) {
-    console.error('Error checking username availability:', error);
-    errors.usernameAvailability =
-      'Unable to verify username availability. Please try again later.';
-  }
-};
-
 const handleSubmit = async () => {
   // Validate all fields before submission
   const isUsernameValid = validateUsername();
@@ -176,18 +155,24 @@ const handleSubmit = async () => {
     const response = await useAuth().register(toRaw(form));
     if (response.code) {
       signupCode.value = response.code;
+      console.log('Signup code:', signupCode.value);
       reqireEmailVerification.value = true;
     } else {
       successMessage.value = 'Registration successful. You are now logged in.';
       navigateTo('/');
     }
   } catch (error) {
-    console.error('Error during registration:', error);
-    submissionError.value = 'Registration failed. Please try again.';
+    if (error.name === useAuth().INVALIDATE_INFO_ERROR) {
+      submissionError.value = await error.response.text();
+    } else {
+      console.error('Error during registration:', error);
+      submissionError.value = 'Registration failed. Unexpected Error.';
+    }
   } finally {
     isSubmitting.value = false;
   }
 };
+const retryTimes = ref(3);
 const verify = (code) => {
   if (code === signupCode.value) {
     successMessage.value = 'Verification successful.';
@@ -198,10 +183,17 @@ const verify = (code) => {
       })
       .catch((error) => {
         console.error('Error during email verification:', error);
-        submissionError.value = 'Error: cannot create user. Please try again.';
+        alert('Error: cannot create user. Please try again.');
       });
   } else {
-    submissionError.value = 'Verification code is incorrect. Please try again.';
+    retryTimes.value--;
+    if (retryTimes.value === 0) {
+      alert('You have exceeded the maximum number of attempts.');
+      navigateTo('/user/register');
+    }
+    alert(
+      `Verification code is incorrect. You have ${retryTimes.value} attempts left.`
+    );
   }
 };
 const goToLogin = () => {

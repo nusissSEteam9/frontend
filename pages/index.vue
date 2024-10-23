@@ -153,6 +153,7 @@
 import { useAuthStore } from '~/stores/auth';
 
 const authStore = useAuthStore();
+console.log(authStore.token);
 const searchQuery = ref('');
 const searchType = ref('');
 const filters = ref({
