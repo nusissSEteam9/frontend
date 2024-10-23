@@ -55,63 +55,63 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <template v-if="!isAdmin">
                 <nuxt-link class="dropdown-item" to="/member/myProfile"
-                  >My Profile</nuxt-link
-                >
+                  >My Profile
+                </nuxt-link>
                 <div class="dropdown-divider" />
                 <nuxt-link class="dropdown-item" to="/member/myRecipeList"
-                  >My Recipes</nuxt-link
-                >
+                  >My Recipes
+                </nuxt-link>
                 <div class="dropdown-divider" />
                 <nuxt-link class="dropdown-item" to="/member/savedList"
-                  >Saved Recipes</nuxt-link
-                >
+                  >Saved Recipes
+                </nuxt-link>
                 <div class="dropdown-divider" />
                 <nuxt-link class="dropdown-item" to="/member/myReview"
-                  >My Reviews</nuxt-link
-                >
+                  >My Reviews
+                </nuxt-link>
                 <div class="dropdown-divider" />
                 <nuxt-link class="dropdown-item" to="/member/shoppingList"
-                  >Shopping List</nuxt-link
-                >
+                  >Shopping List
+                </nuxt-link>
                 <div class="dropdown-divider" />
               </template>
               <template v-if="isAdmin">
                 <nuxt-link class="dropdown-item" to="/user/admin/dashboard"
-                  >Dashboard</nuxt-link
-                >
+                  >Dashboard
+                </nuxt-link>
                 <div class="dropdown-divider" />
                 <nuxt-link class="dropdown-item" to="/user/admin/memberManage"
-                  >Manage Members</nuxt-link
-                >
+                  >Manage Members
+                </nuxt-link>
                 <div class="dropdown-divider" />
                 <nuxt-link class="dropdown-item" to="/user/admin/memberReport"
-                  >Member Reports</nuxt-link
-                >
+                  >Member Reports
+                </nuxt-link>
                 <div class="dropdown-divider" />
                 <nuxt-link class="dropdown-item" to="/user/admin/recipeReport"
-                  >Recipe Reports</nuxt-link
-                >
+                  >Recipe Reports
+                </nuxt-link>
                 <div class="dropdown-divider" />
                 <nuxt-link
                   class="dropdown-item"
                   to="/user/admin/generateCsvReport"
-                  >Generate Csv</nuxt-link
-                >
+                  >Generate Csv
+                </nuxt-link>
                 <div class="dropdown-divider" />
               </template>
               <template v-if="isLoggedIn">
                 <nuxt-link class="dropdown-item" @click="logout"
-                  >Logout</nuxt-link
-                >
+                  >Logout
+                </nuxt-link>
               </template>
               <template v-else>
                 <nuxt-link class="dropdown-item" to="/user/login"
-                  >Login</nuxt-link
-                >
+                  >Login
+                </nuxt-link>
                 <div class="dropdown-divider"></div>
                 <nuxt-link class="dropdown-item" to="/user/register"
-                  >Register</nuxt-link
-                >
+                  >Register
+                </nuxt-link>
               </template>
             </div>
           </li>
@@ -124,6 +124,7 @@
 <script setup>
 import { reactive } from 'vue';
 import { useAuthStore } from '~/stores/auth';
+
 const authStore = useAuthStore();
 const isLoggedIn = authStore.isLoggedIn;
 const logout = () => {
@@ -220,6 +221,12 @@ const isAdmin = ref(false); // Replace with actual logic to determine if the use
 </script>
 
 <style scoped>
+.navbar-nav {
+  display: flex;
+  flex-wrap: wrap; /* 允许导航栏在宽度不够时自动换行 */
+  justify-content: center;
+}
+
 .nav-item {
   position: relative;
 }
