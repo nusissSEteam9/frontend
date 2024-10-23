@@ -1,1 +1,0 @@
-<template>todo: shoppingList</template>
