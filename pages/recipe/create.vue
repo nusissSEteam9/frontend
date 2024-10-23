@@ -388,10 +388,14 @@ const addIngredient = async () => {
   try {
     isFetching.value = true;
     ingredientsErrorMessage.value = '';
-    const response = await fetch(
-      `https://api.edamam.com/api/nutrition-data?app_id=a0eca928&app_key=2791c4e7ff627b1a94a4a8e41a6e0a14&nutrition-type=cooking&ingr=${encodeURIComponent(ingrValue)}`
-    );
-    const data = await response.json();
+    const data = await $fetch(`https://api.edamam.com/api/nutrition-data`, {
+      params: {
+        app_id: 'a0eca928',
+        app_key: '2791c4e7ff627b1a94a4a8e41a6e0a14',
+        nutrition_type: 'cooking',
+        ingr: ingrValue,
+      },
+    });
     if (!data.totalNutrients || Object.keys(data.totalNutrients).length === 0) {
       ingredientsErrorMessage.value =
         'This ingredient does not have nutrition data or not exist.';
@@ -516,17 +520,13 @@ const submitForm = async () => {
     console.log('Submitting recipe:', JSON.stringify(payload));
 
     try {
-      const response = await fetch('/api/recipe/create', {
+      await $fetch('/api/recipe/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: payload,
       });
-      if (!response.ok) {
-        throw new Error('Failed to submit recipe');
-      }
-
       alert('Recipe submitted successfully!');
       router.push('/'); // 提交成功后跳转到首页
     } catch (error) {
