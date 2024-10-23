@@ -33,7 +33,6 @@ export const useAuth = () => {
           'Content-Type': 'application/json',
         },
         body: { username, password },
-        credentials: 'include',
         onResponse({ request, response }) {
           const authHeader = response.headers.get('Authorization');
           if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -72,7 +71,6 @@ export const useAuth = () => {
           'Content-Type': 'application/json',
         },
         body: form,
-        credentials: 'include',
         onResponse({ request, response }) {
           const authHeader = response.headers.get('Authorization');
           if (authHeader && authHeader.startsWith('Bearer ')) {
