@@ -22,7 +22,8 @@ jobs:
 
       # Install dependencies
       - name: Install dependencies
-        run: bun install
+        run: export NUXT_BACKEND_PROXY_URL=${{ secrets.NUXT_BACKEND_PROXY_URL }}
+          bun install
 
       # Build the Nuxt.js app
       - name: Build Nuxt.js
