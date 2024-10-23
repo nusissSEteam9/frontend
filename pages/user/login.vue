@@ -77,7 +77,7 @@ const handleSubmit = async () => {
 const config = useRuntimeConfig();
 console.log(config.public);
 const logout = () => {
-  $fetch('/auth/logout', {
+  $fetch('/api/auth/logout', {
     baseURL: config.public.backendProxyUrl,
     onResponse: (message) => {
       console.log(message);

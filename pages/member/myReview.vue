@@ -60,12 +60,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-/* Scoped Styles */
-
-.container {
-  /* Additional container styles if needed */
-}
-
-/* Button styles are already handled globally via assets/style.css */
-</style>
+<style scoped></style>
