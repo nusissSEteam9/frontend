@@ -77,7 +77,7 @@ const handleSubmit = async () => {
 
 const logout = () => {
   $fetch('/api/auth/logout', {
-    baseURL: process.env.NUXT_BACKEND_PROXY_URL,
+    baseURL: config.public.backendProxyUrl,
     onResponse: (message) => {
       console.log(message);
     },
