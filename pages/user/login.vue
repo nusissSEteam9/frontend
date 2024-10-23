@@ -82,7 +82,6 @@ const logout = () => {
     onResponse: (message) => {
       console.log(message);
     },
-    credentials: 'include',
   });
 };
 </script>
