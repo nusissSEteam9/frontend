@@ -13,7 +13,6 @@ interface RegisterResponse {
 
 export const useAuth = () => {
   const authStore = useAuthStore();
-  const config = useRuntimeConfig();
   /**
    * Handles user login.
    * @param username - The username of the user.
@@ -27,7 +26,7 @@ export const useAuth = () => {
     }
     try {
       await $fetch<LoginResponse>('/api/auth/login', {
-        baseURL: config.public.backendProxyUrl,
+        baseURL: process.env.NUXT_BACKEND_PROXY_URL,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +64,7 @@ export const useAuth = () => {
   }> => {
     try {
       const res = await $fetch<RegisterResponse>('/api/auth/register', {
-        baseURL: config.public.backendProxyUrl,
+        baseURL: process.env.NUXT_BACKEND_PROXY_URL,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
