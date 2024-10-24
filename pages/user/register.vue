@@ -18,9 +18,6 @@
             <span v-if="errors.username" class="error">{{
               errors.username
             }}</span>
-            <span v-if="errors.usernameAvailability" class="error">
-              {{ errors.usernameAvailability }}
-            </span>
           </div>
           <div class="form-group">
             <label for="password">Password:</label>
@@ -73,6 +70,8 @@
 </template>
 
 <script setup lang="ts">
+import InvalidateInfoError from '~/utils/invalidateInfoError';
+
 definePageMeta({
   middleware: 'signin',
 });
@@ -89,7 +88,6 @@ const form = reactive({
 
 const errors = reactive({
   username: '',
-  usernameAvailability: '',
   password: '',
   email: '',
 });
@@ -137,12 +135,7 @@ const handleSubmit = async () => {
   const isPasswordValid = validatePassword();
   const isEmailValid = validateEmail();
 
-  if (
-    !isUsernameValid ||
-    !isPasswordValid ||
-    !isEmailValid ||
-    errors.usernameAvailability
-  ) {
+  if (!isUsernameValid || !isPasswordValid || !isEmailValid) {
     alert('Please resolve the errors before submitting the form.');
     return;
   }
@@ -153,6 +146,7 @@ const handleSubmit = async () => {
 
   try {
     const response = await useAuth().register(toRaw(form));
+    console.log('Response:', response);
     if (response.code) {
       signupCode.value = response.code;
       console.log('Signup code:', signupCode.value);
@@ -162,10 +156,10 @@ const handleSubmit = async () => {
       navigateTo('/');
     }
   } catch (error) {
-    if (error.name === useAuth().INVALIDATE_INFO_ERROR) {
-      submissionError.value = await error.response.text();
+    if (error instanceof InvalidateInfoError) {
+      submissionError.value = error.message;
     } else {
-      console.error('Error during registration:', error);
+      console.error('Unexpected:', error);
       submissionError.value = 'Registration failed. Unexpected Error.';
     }
   } finally {
@@ -173,7 +167,7 @@ const handleSubmit = async () => {
   }
 };
 const retryTimes = ref(3);
-const verify = (code) => {
+const verify = (code: string) => {
   if (code === signupCode.value) {
     successMessage.value = 'Verification successful.';
     useAuth()

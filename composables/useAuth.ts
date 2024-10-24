@@ -1,7 +1,7 @@
 // composables/useAuth.ts
 import { useAuthStore } from '~/stores/auth';
 import { useRuntimeConfig, navigateTo } from '#app';
-
+import InvalidateInfoError from '~/utils/invalidateInfoError';
 interface LoginResponse {
   message: string;
 }
@@ -11,7 +11,6 @@ interface RegisterResponse {
   verifyCode?: string;
 }
 export const useAuth = () => {
-  const INVALIDATE_INFO_ERROR = 'InvalidateInfoError' as const;
   const authStore = useAuthStore();
   const config = useRuntimeConfig();
   /**
@@ -63,48 +62,37 @@ export const useAuth = () => {
     message: string;
     code: string;
   }> => {
-    try {
-      const res = await $fetch<RegisterResponse>('/api/auth/register', {
-        baseURL: config.public.backendProxyUrl,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: form,
-        // Handle successful responses
-        onResponse({ request, response }) {
-          const authHeader = response.headers.get('Authorization');
-          if (authHeader && authHeader.startsWith('Bearer ')) {
-            const token = authHeader.split(' ')[1];
-            authStore.setToken(token);
-          }
-        },
-        // Handle error responses
-        onResponseError: async ({ request, response }) => {
-          try {
-            const errorData = await response.json();
-            // Throw a new error with the message from the backend
-            const error = Error(
-              errorData.message || 'An error occurred during registration.'
-            );
-            error.name = INVALIDATE_INFO_ERROR;
-            throw error;
-          } catch (parseError) {
-            // If parsing fails, throw a generic error
-            throw new Error('An unexpected error occurred.');
-          }
-        },
-      });
+    const res = await $fetch<RegisterResponse>('/api/auth/register', {
+      baseURL: config.public.backendProxyUrl,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: form,
+      // Handle successful responses
+      onResponse({ request, response }) {
+        const authHeader = response.headers.get('Authorization');
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+          const token = authHeader.split(' ')[1];
+          authStore.setToken(token);
+        }
+      },
+      // Handle error responses
+      onResponseError: async ({ request, response }) => {
+        console.log('response', response);
+        const errorData = response._data;
+        // Throw a new error with the message from the backend
+        throw new InvalidateInfoError(
+          errorData.message || 'An error occurred during registration.'
+        );
+      },
+    });
 
-      // If the request is successful, return the desired data
-      return {
-        message: res.message,
-        code: res.verifyCode || '',
-      };
-    } catch (error: any) {
-      // Rethrow the error message from the backend or a default message
-      throw error.message || 'An error occurred during registration.';
-    }
+    // If the request is successful, return the desired data
+    return {
+      message: res.message,
+      code: res.verifyCode || '',
+    };
   };
 
   /**
@@ -152,5 +140,5 @@ export const useAuth = () => {
     navigateTo('/login');
   };
 
-  return { login, register, verifyEmail, logout, INVALIDATE_INFO_ERROR };
+  return { login, register, verifyEmail, logout };
 };
