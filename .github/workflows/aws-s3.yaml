@@ -3,7 +3,7 @@ name: Deploy to S3
 on:
   push:
     branches:
-      - deploy # Triggers when code is pushed to the 'main' branch
+      - main # Triggers when code is pushed to the 'main' branch
 
 jobs:
   deploy:
@@ -26,8 +26,9 @@ jobs:
 
       # Build the Nuxt.js app
       - name: Build Nuxt.js
+        env:
+          NUXT_BACKEND_PROXY_URL: ${{ secrets.NUXT_BACKEND_PROXY_URL }}
         run: bun run generate
-
       # Deploy to S3
       - name: Deploy
         uses: reggionick/s3-deploy@v4

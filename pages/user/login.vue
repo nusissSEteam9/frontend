@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-end">
+      <div class="image-section"></div>
       <div class="col-md-4">
         <div class="card login-card">
           <div class="card-header">
@@ -74,34 +75,90 @@ const handleSubmit = async () => {
     errorMessage.value = error.response.data.message;
   }
 };
-const config = useRuntimeConfig();
-console.log(config.public);
+
 const logout = () => {
-  $fetch('/auth/logout', {
+  $fetch('/api/auth/logout', {
     baseURL: config.public.backendProxyUrl,
     onResponse: (message) => {
       console.log(message);
     },
-    credentials: 'include',
   });
 };
 </script>
 <style>
-.btn-success.btn-outline {
-  color: #5cb85c;
+/* 整个容器的样式，确保页面占满整个视口 */
+.login-container {
+  height: 100vh; /* 页面全屏高度 */
+  display: flex;
+  flex-direction: row;
 }
-.btn-success.btn-outline:hover {
-  color: white;
+
+.full-height {
+  height: 100vh; /* 行高设置为全屏 */
 }
-.btn-success {
-  margin-bottom: 10px;
+
+.image-section {
+  background-image: url('public/images/login-background.png'); /* 替换为实际图片路径 */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  flex: 1;
+  min-width: 50%; /* 设置宽度，或根据需要调整 */
+}
+
+.login-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* 让登录部分高度撑满父容器 */
 }
 
 .login-card {
-  margin-top: 25%;
+  width: 100%;
+  max-width: 400px; /* 登录框的最大宽度 */
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body {
+  flex-grow: 1; /* 让 body 部分占满剩余空间 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly; /* 让表单内容在垂直方向上平均分布 */
+  height: 100%;
+}
+
+.d-grid.gap-1 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* 设置表单项之间的间距 */
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 20px; /* 顶部标题和表单的间距 */
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 15px; /* 每个表单输入项之间的间距 */
+  flex-grow: 1;
+}
+
+.btn-success {
+  margin-bottom: 10px;
+  padding: 15px;
+}
+
+.btn-success.btn-outline {
+  color: #5cb85c;
+}
+
+.btn-success.btn-outline:hover {
+  color: white;
+}
+
+.form-group input {
+  padding: 15px; /* 确保输入框的高度 */
 }
 </style>

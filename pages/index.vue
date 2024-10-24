@@ -150,9 +150,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useAuthStore } from '~/stores/auth';
 
+const authStore = useAuthStore();
+console.log(authStore.token);
 const searchQuery = ref('');
 const searchType = ref('');
 const filters = ref({
@@ -167,18 +168,21 @@ const route = useRoute();
 
 // 从API获取数据
 const searchRecipes = async () => {
-  const params = {
+  const params = new URLSearchParams({
     query: searchQuery.value || '',
     searchtype: searchType.value || '',
     filter1: filters.value.healthScore ? true : false,
     filter2: filters.value.calorieIntake ? true : false,
     pageNo: currentPage.value,
     pageSize: pageSize.value,
-  };
+  });
   try {
-    const data = await $fetch('/api/recipe/search', {
+    const data = await $fetch(`/api/recipe/search?${params.toString()}`, {
       method: 'POST',
-      body: new URLSearchParams(params),
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
     });
     console.log(data);
     recipes.value = data.results;

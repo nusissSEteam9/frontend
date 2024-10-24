@@ -10,8 +10,8 @@ interface RegisterResponse {
   message: string;
   verifyCode?: string;
 }
-
 export const useAuth = () => {
+  const INVALIDATE_INFO_ERROR = 'InvalidateInfoError' as const;
   const authStore = useAuthStore();
   const config = useRuntimeConfig();
   /**
@@ -26,14 +26,13 @@ export const useAuth = () => {
       throw error;
     }
     try {
-      await $fetch<LoginResponse>('/auth/login', {
+      await $fetch<LoginResponse>('/api/auth/login', {
         baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: { username, password },
-        credentials: 'include',
         onResponse({ request, response }) {
           const authHeader = response.headers.get('Authorization');
           if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -65,14 +64,14 @@ export const useAuth = () => {
     code: string;
   }> => {
     try {
-      const res = await $fetch<RegisterResponse>('/auth/register', {
+      const res = await $fetch<RegisterResponse>('/api/auth/register', {
         baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: form,
-        credentials: 'include',
+        // Handle successful responses
         onResponse({ request, response }) {
           const authHeader = response.headers.get('Authorization');
           if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -80,13 +79,31 @@ export const useAuth = () => {
             authStore.setToken(token);
           }
         },
+        // Handle error responses
+        onResponseError: async ({ request, response }) => {
+          try {
+            const errorData = await response.json();
+            // Throw a new error with the message from the backend
+            const error = Error(
+              errorData.message || 'An error occurred during registration.'
+            );
+            error.name = INVALIDATE_INFO_ERROR;
+            throw error;
+          } catch (parseError) {
+            // If parsing fails, throw a generic error
+            throw new Error('An unexpected error occurred.');
+          }
+        },
       });
+
+      // If the request is successful, return the desired data
       return {
         message: res.message,
         code: res.verifyCode || '',
       };
     } catch (error: any) {
-      throw error.data?.message || 'An error occurred during registration.';
+      // Rethrow the error message from the backend or a default message
+      throw error.message || 'An error occurred during registration.';
     }
   };
 
@@ -135,16 +152,5 @@ export const useAuth = () => {
     navigateTo('/login');
   };
 
-  /**
-   * Fetches user details.
-   * @todo Implement this based on your backend's user details endpoint.
-   */
-  const fetchUser = async (): Promise<void> => {
-    // Implement fetching user details if your backend provides an endpoint
-    // Example:
-    // const user = await $fetch<User>('/auth/me', { ... })
-    // authStore.setUser(user)
-  };
-
-  return { login, register, verifyEmail, logout, fetchUser };
+  return { login, register, verifyEmail, logout, INVALIDATE_INFO_ERROR };
 };
