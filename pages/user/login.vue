@@ -70,17 +70,6 @@ const handleSubmit = async () => {
 };
 </script>
 <style>
-/* 整个容器的样式，确保页面占满整个视口 */
-.login-container {
-  height: 100vh; /* 页面全屏高度 */
-  display: flex;
-  flex-direction: row;
-}
-
-.full-height {
-  height: 100vh; /* 行高设置为全屏 */
-}
-
 .image-section {
   background-image: url('public/images/login-background.png'); /* 替换为实际图片路径 */
   background-size: cover;
@@ -88,13 +77,6 @@ const handleSubmit = async () => {
   background-repeat: no-repeat;
   flex: 1;
   min-width: 50%; /* 设置宽度，或根据需要调整 */
-}
-
-.login-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%; /* 让登录部分高度撑满父容器 */
 }
 
 .login-card {

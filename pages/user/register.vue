@@ -1,68 +1,87 @@
 <template>
   <template v-if="!reqireEmailVerification">
     <div class="container">
-      <h2>Register New Account</h2>
-      <br />
-      <form id="registerForm" @submit.prevent="handleSubmit">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="username">Username:</label>
-            <input
-              id="username"
-              v-model="form.username"
-              type="text"
-              placeholder="Enter username"
-              @input="validateUsername"
-              required
-            />
-            <span v-if="errors.username" class="error">{{
-              errors.username
-            }}</span>
+      <div class="row justify-content-end">
+        <!--        <img class="image-section" src="/images/login-background.png" alt="" />-->
+        <div class="image-section" />
+        <div class="col-md-4">
+          <div class="card register-card">
+            <div class="card-header">
+              <h3>Register New Account</h3>
+            </div>
+            <br />
+            <div class="card-body">
+              <form id="registerForm" @submit.prevent="handleSubmit">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input
+                      id="username"
+                      v-model="form.username"
+                      type="text"
+                      placeholder="Enter username"
+                      @input="validateUsername"
+                      required
+                    />
+                    <span v-if="errors.username" class="error">{{
+                      errors.username
+                    }}</span>
+                  </div>
+                  <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input
+                      id="password"
+                      v-model="form.password"
+                      type="password"
+                      placeholder="Enter password"
+                      @blur="validatePassword"
+                      required
+                    />
+                    <span v-if="errors.password" class="error">{{
+                      errors.password
+                    }}</span>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input
+                      id="email"
+                      v-model="form.email"
+                      type="email"
+                      placeholder="Enter email"
+                      @blur="validateEmail"
+                    />
+                    <span v-if="errors.email" class="error">{{
+                      errors.email
+                    }}</span>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <button type="submit" :disabled="isSubmitting">
+                    {{ isSubmitting ? 'Registering...' : 'Register' }}
+                  </button>
+                  <button
+                    type="button"
+                    class="button-right"
+                    @click.prevent="goToLogin"
+                  >
+                    Go back Login
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input
-              id="password"
-              v-model="form.password"
-              type="password"
-              placeholder="Enter password"
-              @blur="validatePassword"
-              required
-            />
-            <span v-if="errors.password" class="error">{{
-              errors.password
-            }}</span>
+          <div v-if="successMessage" class="success">
+            {{ successMessage }}
+          </div>
+          <div v-if="submissionError" class="error">
+            {{ submissionError }}
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input
-              id="email"
-              v-model="form.email"
-              type="email"
-              placeholder="Enter email"
-              @blur="validateEmail"
-            />
-            <span v-if="errors.email" class="error">{{ errors.email }}</span>
-          </div>
-        </div>
-        <div class="form-row">
-          <button type="submit" :disabled="isSubmitting">
-            {{ isSubmitting ? 'Registering...' : 'Register' }}
-          </button>
-          <button type="button" class="button-right" @click.prevent="goToLogin">
-            Go back Login
-          </button>
-        </div>
-      </form>
-      <div v-if="successMessage" class="success">
-        {{ successMessage }}
-      </div>
-      <div v-if="submissionError" class="error">
-        {{ submissionError }}
       </div>
     </div>
+    >
   </template>
   <template v-if="reqireEmailVerification">
     <register-verification :verify="verify"></register-verification>
@@ -196,81 +215,115 @@ const goToLogin = () => {
 </script>
 
 <style scoped>
-.container {
+.image-section {
+  background-image: url('public/images/login-background.png'); /* 替换为实际图片路径 */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  flex: 1;
+  min-width: 50%; /* 设置宽度，或根据需要调整 */
+}
+
+.register-card {
+  width: 100%;
+  max-width: 400px; /* 设置最大宽度与登录页面一致 */
+  min-height: 80vh; /* 保持最小高度一致 */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 60%;
-  margin: 0 auto;
+  padding: 0px; /* 统一内边距 */
+  background-color: white; /* 白色背景 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+  border-radius: 8px; /* 添加圆角 */
 }
 
-h2 {
+.card-header {
   text-align: center;
-  color: #333;
+  margin-bottom: 0;
+  padding: 10px;
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 3fr;
-  gap: 10px;
+.card-body {
+  flex-grow: 1; /* 让 body 部分占满剩余空间 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly; /* 垂直方向上平均分布 */
+  gap: 20px; /* 表单元素之间的间距 */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* 表单元素之间的间距 */
+}
+
+input[type='text'],
+input[type='password'],
+input[type='email'] {
   width: 100%;
-  margin-top: 1rem;
+  padding: 15px; /* 统一输入框的高度和内边距 */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
 .form-group {
-  display: contents;
+  margin-bottom: 15px; /* 每个表单输入项之间的间距 */
 }
 
-label {
-  grid-column: 1;
-  align-self: center;
-}
-
-input {
-  grid-column: 2;
-  padding: 8px;
-  border: 1px solid #ccc;
+button {
+  width: 100%;
+  padding: 15px; /* 确保按钮的高度一致 */
+  background-color: #28a745; /* 与登录页面保持一致的绿色按钮 */
+  color: white;
+  border: none;
+  cursor: pointer;
   border-radius: 4px;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: #218838; /* 悬停效果一致 */
+}
+
+.button-right {
+  margin-top: 10px;
+  background-color: #007bff; /* 设置次要按钮的颜色 */
+  color: white;
+  font-size: 1rem;
+}
+
+.button-right:hover {
+  background-color: #0069d9;
+}
+
+.btn-primary {
+  background-color: #28a745; /* 与登录页面一致的绿色 */
+  border: none;
+}
+
+.btn-success {
+  background-color: #007bff; /* 设置蓝色按钮 */
+  padding: 15px;
+}
+
+.btn-success:hover {
+  background-color: #0069d9; /* 悬停效果一致 */
+}
+
+.d-grid.gap-1 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* 设置表单项之间的间距 */
 }
 
 .error {
   color: red;
-  display: block;
-  margin-top: 5px;
-  grid-column: 2;
+  font-size: 0.875rem;
 }
 
 .success {
   color: green;
+  font-size: 0.875rem;
   margin-top: 10px;
-}
-
-button {
-  padding: 10px 20px;
-  background-color: #5cb85c;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  grid-column: span 2;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #4cae4c;
-}
-
-button:disabled {
-  background-color: #a5d6a7;
-  cursor: not-allowed;
-}
-
-button.button-right {
-  background-color: #d9534f;
-}
-
-button.button-right:hover {
-  background-color: #c9302c;
 }
 </style>
