@@ -62,6 +62,10 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '~/stores/auth';
+
+const authStore = useAuthStore();
+console.log(authStore.token);
 
 // Router for navigation
 const router = useRouter();
@@ -74,7 +78,14 @@ const loading = ref(true);
 onMounted(async () => {
   loading.value = true;
   try {
-    const data = await $fetch('/api/user/member/myRecipeList');
+    const data = await $fetch('/api/user/member/myRecipeList', {
+      method: 'GET',
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
+    });
+    console.log('Recipes:', data);
     recipes.value = data;
   } catch (error) {
     console.error('Error fetching recipes:', error);
