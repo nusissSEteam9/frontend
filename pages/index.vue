@@ -69,7 +69,7 @@
           <NuxtLink :to="`/recipe/detail/${recipe.id}`">
             <img
               class="card-img-top"
-              :src="`/images/${recipe.image}`"
+              :src="getRandomImage()"
               alt="Recipe Image"
               style="width: 100%; height: 200px; object-fit: cover"
             />
@@ -151,7 +151,9 @@
 
 <script setup>
 import { useAuthStore } from '~/stores/auth';
+import { useNuxtApp } from '#app';
 
+const getRandomImage = () => useNuxtApp().$selectRandomImage();
 const authStore = useAuthStore();
 console.log(authStore.token);
 const searchQuery = ref('');
