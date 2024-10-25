@@ -39,15 +39,28 @@
   </div>
 </template>
 
-<script setup>
-// Reactive state for reviews
-const reviews = ref([]);
+<script setup lang="ts">
+import { useAuthStore } from '~/stores/auth';
+const reviewExample = {
+  id: 1,
+  rating: 0,
+  comment: 'testReview1',
+  reviewDate: '2024-09-29',
+};
+const authStore = useAuthStore();
+const reviews = ref<(typeof reviewExample)[]>([]);
 
 // Function to fetch reviews
 const fetchReviews = async () => {
   try {
     // Replace with your actual API endpoint
-    reviews.value = await $fetch('/api/user/member/myReview');
+    reviews.value = await $fetch('/api/user/member/myReview', {
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
+    });
   } catch (error) {
     console.error('Error fetching reviews:', error);
     // Optionally, handle error (e.g., show a notification)
