@@ -41,13 +41,6 @@
                       Register
                     </button>
                   </nuxt-link>
-                  <button
-                    type="button"
-                    @click.prevent="logout"
-                    class="btn btn-success btn-outline w-100"
-                  >
-                    logout
-                  </button>
                 </div>
               </fieldset>
             </form>
@@ -74,15 +67,6 @@ const handleSubmit = async () => {
   } catch (error) {
     errorMessage.value = error.response.data.message;
   }
-};
-
-const logout = () => {
-  $fetch('/api/auth/logout', {
-    baseURL: config.public.backendProxyUrl,
-    onResponse: (message) => {
-      console.log(message);
-    },
-  });
 };
 </script>
 <style>
