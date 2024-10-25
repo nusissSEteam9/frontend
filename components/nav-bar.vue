@@ -55,24 +55,24 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <template v-if="!isAdmin">
                 <nuxt-link class="dropdown-item" to="/user/member/myProfile"
-                  >My Profile</nuxt-link
-                >
+                  >My Profile
+                </nuxt-link>
                 <div class="dropdown-divider" />
                 <nuxt-link class="dropdown-item" to="/user/member/myRecipeList"
-                  >My Recipes</nuxt-link
-                >
+                  >My Recipes
+                </nuxt-link>
                 <div class="dropdown-divider" />
                 <nuxt-link class="dropdown-item" to="/user/member/savedList"
-                  >Saved Recipes</nuxt-link
-                >
+                  >Saved Recipes
+                </nuxt-link>
                 <div class="dropdown-divider" />
                 <nuxt-link class="dropdown-item" to="/user/member/myReview"
-                  >My Reviews</nuxt-link
-                >
+                  >My Reviews
+                </nuxt-link>
                 <div class="dropdown-divider" />
                 <nuxt-link class="dropdown-item" to="/user/member/shoppingList"
-                  >Shopping List</nuxt-link
-                >
+                  >Shopping List
+                </nuxt-link>
                 <div class="dropdown-divider" />
               </template>
               <template v-if="isAdmin">
@@ -221,6 +221,37 @@ const isAdmin = ref(false); // Replace with actual logic to determine if the use
 </script>
 
 <style scoped>
+.navbar-brand {
+  font-size: 2rem; /* 设置标题字体大小 */
+  font-weight: bold; /* 加粗字体 */
+  color: #2c7a7b; /* 设置一个柔和的绿色，强调健康 */
+  text-transform: uppercase; /* 将文本全部转换为大写 */
+  background: linear-gradient(
+    to right,
+    #2c7a7b,
+    #6fd6ce
+  ); /* 添加渐变背景效果 */
+  -webkit-background-clip: text; /* 使文字本身有渐变效果 */
+  display: inline-block; /* 让背景色和边框适应文字大小 */
+  padding: 10px 15px; /* 给标题增加内边距 */
+  border-radius: 5px; /* 圆角边框 */
+}
+
+.navbar-brand::after {
+  display: block;
+  margin-top: 5px;
+  width: 80%;
+  height: 2px;
+  background: #2c7a7b; /* 设置与文字相同的颜色 */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.05); /* 鼠标悬停时放大标题 */
+  transition: transform 0.3s ease; /* 添加平滑过渡效果 */
+}
+
 .navbar-nav {
   display: flex;
   flex-wrap: wrap; /* 允许导航栏在宽度不够时自动换行 */
@@ -239,10 +270,54 @@ const isAdmin = ref(false); // Replace with actual logic to determine if the use
   display: none;
 }
 
+.navbar a {
+  font-size: 1rem; /* 设置字体大小，适合导航栏 */
+  font-weight: bold; /* 设置粗体，使其与标题一致 */
+  text-decoration: none; /* 移除默认的下划线 */
+  text-transform: uppercase; /* 全部字母大写，保持一致风格 */
+  padding: 10px 15px; /* 给导航栏链接增加内边距，增加点击区域 */
+  transition: color 0.3s ease; /* 添加颜色变化的平滑过渡效果 */
+}
+
+.navbar a:hover {
+  color: #38b2ac; /* 鼠标悬停时使用一个稍浅的颜色，与标题保持风格一致 */
+  text-decoration: none; /* 鼠标悬停时添加下划线，突出链接 */
+}
+
 .dropdown-menu {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  padding: 0; /* 确保没有多余的内边距 */
+  margin: 0; /* 确保没有多余的外边距 */
+  font-size: 1rem; /* 字体大小与导航栏保持一致 */
+  font-weight: bold; /* 粗体文字 */
+  color: #2c7a7b; /* 设置与商标一致的颜色 */
+  text-transform: uppercase; /* 全部字母大写 */
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease; /* 平滑过渡效果 */
+}
+
+.dropdown-item {
+  text-decoration: none; /* 移除默认的下划线 */
+  padding: 10px 20px; /* 给每个菜单项设置相同的内边距 */
+  font-size: 1rem; /* 保持文字大小一致 */
+  font-weight: bold; /* 粗体文字 */
+  color: #3f3f3f; /* 设置颜色 */
+  text-transform: uppercase; /* 全部字母大写 */
+  cursor: pointer;
+  border-bottom: none; /* 先去掉默认的边框 */
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease; /* 添加平滑过渡效果 */
+  border-bottom: 1px solid #bdbdbd; /* 通过 border-bottom 设置分割线 */
+}
+
+.dropdown-divider {
+  display: none; /* 隐藏分割线 */
+}
+
+.nav-item:last-child {
+  border-bottom: none; /* 最后一个菜单项不要分隔线 */
 }
 
 .nav-item:hover .dropdown-menu {
