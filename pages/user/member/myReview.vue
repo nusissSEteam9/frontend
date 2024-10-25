@@ -22,15 +22,27 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(review, index) in reviews" :key="review.id">
+          <tr v-for="(review, index) in reviews" :key="review.reviewId">
             <th scope="row">{{ index + 1 }}</th>
-            <td>{{ review.id }}</td>
+            <td>{{ review.reviewId }}</td>
             <td>
-              <a :href="`/recipe/detail/${review.recipe.id}`">
-                {{ review.recipe.name }}
+              <a :href="`/recipe/detail/${review.recipeId}`">
+                {{ review.recipeName }}
               </a>
             </td>
-            <td>{{ review.rating }}</td>
+            <td>
+              <span
+                v-for="i in review.rating"
+                :key="i"
+                class="bi bi-star-fill"
+                :class="{ checked: i <= review.rating }"
+              ></span>
+              <span
+                v-for="i in 5 - review.rating"
+                :key="i"
+                class="bi bi-star"
+              ></span>
+            </td>
             <td>{{ review.comment }}</td>
           </tr>
         </tbody>
@@ -42,10 +54,11 @@
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth';
 const reviewExample = {
-  id: 1,
+  reviewId: 1,
+  recipeName: 'recipe1Name',
+  recipeId: 1,
   rating: 0,
   comment: 'testReview1',
-  reviewDate: '2024-09-29',
 };
 const authStore = useAuthStore();
 const reviews = ref<(typeof reviewExample)[]>([]);
