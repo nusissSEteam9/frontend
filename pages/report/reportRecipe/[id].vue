@@ -1,65 +1,75 @@
 <template>
-  <div class="container" style="width: 60%">
+  <div class="container" style="max-width: 60%">
     <br />
-    <h2><b>Report Recipe</b></h2>
-    <br />
-    <form @submit.prevent="submitReport">
-      <div class="mb-3">
-        <label for="reason" class="form-label">Type yuor reason here:</label>
-        <textarea
-          id="reason"
-          v-model="reason"
-          rows="4"
-          class="form-control"
-          required
-        />
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title text-center"><b>Report Recipe</b></h2>
+        <p class="card-text text-muted text-center">
+          Please provide the reason for reporting this recipe.
+        </p>
+
+        <form @submit.prevent="submitReport">
+          <div class="mb-3">
+            <label for="reason" class="form-label fw-bold"
+              >Type your reason here:</label
+            >
+            <textarea
+              id="reason"
+              v-model="reason"
+              rows="5"
+              class="form-control"
+              placeholder="Explain why you are reporting this recipe"
+              required
+            ></textarea>
+          </div>
+
+          <!-- Hidden field for the reported recipe ID -->
+          <input type="hidden" :value="report.recipeReportedId" />
+
+          <!-- Buttons -->
+          <div class="d-flex justify-content-between mt-4">
+            <button type="submit" class="btn btn-danger">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>Submit Report
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="cancelReport"
+            >
+              <i class="bi bi-x-circle-fill me-2"></i>Cancel
+            </button>
+          </div>
+        </form>
       </div>
-
-      <!-- 隐藏字段，包含被举报的用户和食谱 -->
-      <input type="hidden" :value="report.member" />
-      <input type="hidden" :value="report.recipeReported" />
-
-      <button type="submit" class="btn btn-primary" style="margin-right: 20px">
-        Submit Report
-      </button>
-      <button type="button" class="btn btn-secondary" @click="cancelReport">
-        Cancel
-      </button>
-    </form>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useFetch } from 'nuxt/app';
 
 const route = useRoute();
 const router = useRouter();
-const recipeId = route.params.recipeId;
+const recipeReportedId = route.params.id;
 
 const report = ref({
-  member: '', // 举报人
-  recipeReported: '', // 被举报的食谱
+  recipeReported: recipeReportedId, // 被举报食谱
 });
 const reason = ref(''); // 用户输入的举报理由
-
-const fetchReportData = async () => {
-  const { data } = await useFetch(`/api/report/reportRecipe/${recipeId}`);
-  report.value.member = data.value.member;
-  report.value.recipeReported = data.value.recipeReported;
-};
 
 const submitReport = async () => {
   const payload = {
     reason: reason.value,
-    member: report.value.member,
-    recipeReported: report.value.recipeReported,
+    recipeReportedId: report.value.recipeReported,
   };
-
+  console.log(payload);
   try {
     await $fetch('/api/report/reportRecipe', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: payload,
     });
     alert('Report submitted successfully.');
@@ -71,16 +81,35 @@ const submitReport = async () => {
 };
 
 const cancelReport = () => {
-  router.back();
+  router.push('/');
 };
-
-onMounted(() => {
-  fetchReportData();
-});
 </script>
 
 <style scoped>
 .container {
-  margin-top: 20px;
+  margin-top: 30px;
+}
+
+.card {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f8f9fa;
+}
+
+.card-title {
+  font-size: 1.75rem;
+  color: #dc3545;
+}
+
+.card-text {
+  margin-bottom: 20px;
+}
+
+textarea {
+  resize: none;
+}
+
+button i {
+  margin-right: 5px;
 }
 </style>

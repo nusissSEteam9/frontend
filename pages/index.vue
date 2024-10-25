@@ -111,7 +111,7 @@
       >
         «
       </button>
-      <span>&nbsp; Page {{ currentPage }} of {{ totalPages }}&nbsp;</span>
+      <span>&nbsp; Page {{ currentPage + 1 }} of {{ totalPages }}&nbsp;</span>
       <button
         :class="{
           'btn btn-outline-success': currentPage < totalPages - 1,

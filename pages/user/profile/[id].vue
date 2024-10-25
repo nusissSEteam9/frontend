@@ -112,12 +112,14 @@ const currentPage = ref(1);
 const itemsPerPage = 8;
 
 const fetchUserProfile = async () => {
-  const { data: userData } = await useFetch(
-    `/api/user/profile/${userId}`
-  );
-  member.value = userData.value.member;
-  publicRecipes.value = userData.value.publicRecipes || [];
-  isAdmin.value = userData.value.ifAdmin;
+  try {
+    const userData = await $fetch(`/api/user/profile/${userId}`);
+    member.value = userData.member;
+    publicRecipes.value = userData.publicRecipes || [];
+    isAdmin.value = userData.ifAdmin;
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+  }
 };
 
 onMounted(() => {
