@@ -346,6 +346,10 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '~/stores/auth';
+
+const authStore = useAuthStore();
+console.log(authStore.token);
 
 // Reactive data for the recipe form
 const recipe = ref({
@@ -522,8 +526,9 @@ const submitForm = async () => {
     try {
       await $fetch('/api/recipe/create', {
         method: 'POST',
+        baseURL: useRuntimeConfig().public.backendProxyUrl,
         headers: {
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authStore.token}`,
         },
         body: payload,
       });
