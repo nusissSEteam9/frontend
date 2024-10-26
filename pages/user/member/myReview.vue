@@ -6,7 +6,7 @@
     </div>
 
     <!-- Reviews Section -->
-    <div class="container" style="text-align: center; width: 70%; margin: auto">
+    <div class="container" style="text-align: center; width: 90%; margin: auto">
       <!-- No Reviews Message -->
       <p v-if="reviews.length === 0" class="text-center">No Reviews Yet</p>
 
@@ -88,7 +88,9 @@ onMounted(() => {
 <style scoped>
 /* Container Styling */
 .container {
-  margin-top: 2rem;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
   background-color: #f8f9fa;
   padding: 20px;
   border-radius: 8px;
@@ -110,7 +112,9 @@ h2 {
   width: 100%;
   margin: auto;
   border-collapse: collapse;
+  border: 1px solid #d0d0d0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  table-layout: auto; /* 让列根据内容自动调整宽度 */
 }
 
 .table th,
@@ -119,6 +123,9 @@ h2 {
   text-align: center;
   vertical-align: middle;
   border-bottom: 1px solid #e0e0e0;
+  word-wrap: break-word; /* 允许单词换行 */
+  word-break: break-word; /* 强制单词换行，避免长字符串不换行 */
+  white-space: normal; /* 确保长文本换行到下一行 */
 }
 
 .table th {
@@ -188,5 +195,25 @@ h2 {
   .bi-star-fill {
     font-size: 1rem;
   }
+}
+
+.table th:nth-child(1),
+.table td:nth-child(1) {
+  width: 5%; /* 序号列 */
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+  width: 15%; /* 菜谱名称列 */
+}
+
+.table th:nth-child(3),
+.table td:nth-child(3) {
+  width: 15%; /* 评分列 */
+}
+
+.table th:nth-child(4),
+.table td:nth-child(4) {
+  width: 50%; /* 给评论列更多的宽度 */
 }
 </style>
