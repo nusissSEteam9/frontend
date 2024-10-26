@@ -155,7 +155,7 @@ import { useAuthStore } from '~/stores/auth';
 const authStore = useAuthStore();
 console.log(authStore.token);
 const searchQuery = ref('');
-const searchType = ref('');
+const searchType = ref('name'); // 设置默认值为第一个选项 'name'
 const filters = ref({
   healthScore: false,
   calorieIntake: false,
