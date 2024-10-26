@@ -87,9 +87,7 @@ onMounted(() => {
 
 <style scoped>
 /* Container Styling */
-
 .container {
-  max-width: 1200px; /* Set a max width to limit wasted space */
   margin-top: 2rem;
   background-color: #f8f9fa;
   padding: 20px;
@@ -113,7 +111,6 @@ h2 {
   margin: auto;
   border-collapse: collapse;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  table-layout: fixed; /* Ensure table cells adjust properly */
 }
 
 .table th,
@@ -122,7 +119,6 @@ h2 {
   text-align: center;
   vertical-align: middle;
   border-bottom: 1px solid #e0e0e0;
-  word-wrap: break-word; /* Allow text to wrap */
 }
 
 .table th {
@@ -130,7 +126,6 @@ h2 {
   color: #000000;
   font-weight: bold;
   border: 1px solid #d0d0d0;
-  border-top-left-radius: 8px; /* Add rounded corners to header */
 }
 
 .table-hover tbody tr:hover {
@@ -193,32 +188,5 @@ h2 {
   .bi-star-fill {
     font-size: 1rem;
   }
-}
-
-/* Adjust table column widths to make better use of space */
-.table th:nth-child(1),
-.table td:nth-child(1) {
-  width: 5%;
-}
-
-.table th:nth-child(2),
-.table td:nth-child(2) {
-  width: 10%;
-}
-
-.table th:nth-child(3),
-.table td:nth-child(3) {
-  width: 25%;
-}
-
-.table th:nth-child(4),
-.table td:nth-child(4) {
-  width: 20%;
-}
-
-.table th:nth-child(5),
-.table td:nth-child(5) {
-  width: 40%;
-  word-break: break-word; /* Ensure long comments break properly */
 }
 </style>

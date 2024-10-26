@@ -52,10 +52,7 @@
             >
               <i class="bi bi-person-circle" style="font-size: 18px" />
             </a>
-            <div
-              class="dropdown-menu dropdown-menu-end"
-              aria-labelledby="navbarDropdown"
-            >
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <template v-if="!isAdmin">
                 <nuxt-link class="dropdown-item" to="/user/member/myProfile"
                   >My Profile
@@ -300,11 +297,6 @@ const isAdmin = ref(false); // Replace with actual logic to determine if the use
     color 0.3s ease; /* 平滑过渡效果 */
 }
 
-.dropdown-menu-end {
-  right: 0 !important;
-  left: auto !important;
-}
-
 .dropdown-item {
   text-decoration: none; /* 移除默认的下划线 */
   padding: 10px 20px; /* 给每个菜单项设置相同的内边距 */
@@ -314,7 +306,6 @@ const isAdmin = ref(false); // Replace with actual logic to determine if the use
   text-transform: uppercase; /* 全部字母大写 */
   cursor: pointer;
   border-bottom: none; /* 先去掉默认的边框 */
-  background-color: #ffffff; /* 设置单个菜单项的背景颜色 */
   transition:
     background-color 0.3s ease,
     color 0.3s ease; /* 添加平滑过渡效果 */
@@ -323,19 +314,6 @@ const isAdmin = ref(false); // Replace with actual logic to determine if the use
 
 .dropdown-divider {
   display: none; /* 隐藏分割线 */
-}
-
-.dropdown-toggle {
-  border: none;
-  margin-bottom: 5px; /* 按钮和下拉菜单之间增加间距 */
-}
-
-/* 小屏幕上的折叠按钮样式 */
-@media (max-width: 992px) {
-  .dropdown-toggle {
-    border: 1px solid #2c7a7b; /* 当屏幕宽度小于 992px 时，为折叠按钮添加边框 */
-    border-radius: 10px; /* 设置圆角为 10 像素 */
-  }
 }
 
 .nav-item:last-child {
