@@ -127,7 +127,6 @@
 <script setup>
 import { reactive } from 'vue';
 import { useAuthStore } from '~/stores/auth';
-import { onMounted } from 'vue';
 
 const authStore = useAuthStore();
 const isLoggedIn = authStore.isLoggedIn;
