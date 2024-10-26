@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5" style="max-width: 60%">
+  <div class="container mt-5">
     <h2 class="mb-4 text-center">My Profile</h2>
 
     <!-- Profile Card -->
@@ -272,6 +272,25 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.container {
+  max-width: 70%;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styling */
+h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000000;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
 button {
   border-radius: 4px;
   margin-right: 10px;
@@ -282,5 +301,11 @@ button {
   border-color: #cccccc !important;
   color: #666666 !important;
   cursor: not-allowed;
+}
+
+@media (max-width: 992px) {
+  .container {
+    max-width: 92%;
+  }
 }
 </style>
