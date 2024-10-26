@@ -52,7 +52,7 @@
         <tr>
           <td>
             <img
-              :src="`/images/${recipe.image}`"
+              :src="selectImageByRecipeId(recipe.id)"
               alt="Recipe Image"
               style="
                 width: 350px;
@@ -278,15 +278,26 @@
       <form @submit.prevent="submitReview">
         <div class="form-group">
           <label for="rating">Rating:</label>
-          <select
-            v-model="newReview.rating"
-            id="rating"
-            class="form-control"
-            required
-          >
-            <option disabled value="">Please select a rating</option>
-            <option v-for="i in 5" :key="i" :value="i">{{ i }}</option>
-          </select>
+          <!-- Star Rating Input -->
+          <div class="star-rating-input" style="font-size: 24px">
+            <span
+              v-for="i in 5"
+              :key="i"
+              @click="setRating(i)"
+              @mouseover="hoverRating = i"
+              @mouseleave="hoverRating = null"
+              style="cursor: pointer"
+            >
+              <i
+                :class="
+                  i <= (hoverRating || newReview.rating)
+                    ? 'bi bi-star-fill'
+                    : 'bi bi-star'
+                "
+                style="color: gold"
+              ></i>
+            </span>
+          </div>
         </div>
 
         <div class="form-group">
@@ -300,10 +311,17 @@
           ></textarea>
         </div>
 
-        <button type="submit" class="btn btn-success">Submit Review</button>
+        <button
+          type="submit"
+          class="btn btn-success"
+          style="margin-top: 10px; margin-right: 10px"
+        >
+          Submit Review
+        </button>
         <button
           type="button"
           class="btn btn-secondary"
+          style="margin-top: 10px"
           @click="toggleReviewForm"
         >
           Cancel
@@ -317,7 +335,9 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
+import { useNuxtApp } from '#app';
 
+const selectImageByRecipeId = useNuxtApp().$selectImageByRecipeId;
 const authStore = useAuthStore();
 console.log(authStore.token);
 const route = useRoute();
@@ -328,6 +348,7 @@ const reviews = ref([]);
 const isSaved = ref(false); // 假设从API得知用户是否已保存此食谱
 const createdBy = ref('');
 const createdByUserId = ref(null);
+const hoverRating = ref(null);
 
 const showReviewForm = ref(false);
 const newReview = ref({
@@ -363,6 +384,10 @@ const toggleReviewForm = () => {
   showReviewForm.value = !showReviewForm.value;
 };
 
+const setRating = (rating) => {
+  newReview.value.rating = rating;
+};
+
 const submitReview = async () => {
   const payload = {
     rating: newReview.value.rating,
@@ -395,8 +420,8 @@ const submitReview = async () => {
 
 const saveRecipe = async () => {
   try {
-    await $fetch(`/api/recipe/save/${recipeId}`, {
-      method: 'GET',
+    await $fetch(`/api/user/member/saveRecipe/${recipeId}`, {
+      method: 'POST',
       baseURL: useRuntimeConfig().public.backendProxyUrl,
       headers: {
         Authorization: `Bearer ${authStore.token}`,
@@ -409,9 +434,19 @@ const saveRecipe = async () => {
   isSaved.value = true;
 };
 
-const unsaveRecipe = (id) => {
-  // API 调用取消保存食谱
-  isSaved.value = false;
+const unsaveRecipe = async () => {
+  try {
+    await $fetch(`/api/user/member/removeSavedRecipe/${recipeId}`, {
+      method: 'POST',
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
+    });
+    isSaved.value = false;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const reportRecipe = (id) => {
@@ -438,6 +473,17 @@ a {
 .two-thirds-column {
   width: 65%;
   float: left;
+}
+
+.star-rating-input i {
+  font-size: 24px;
+  cursor: pointer;
+  color: gold;
+}
+
+.star-rating-input i:hover,
+.star-rating-input i.bi-star-fill {
+  color: orange;
 }
 
 /* table {

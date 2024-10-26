@@ -69,7 +69,7 @@
           <NuxtLink :to="`/recipe/detail/${recipe.id}`">
             <img
               class="card-img-top"
-              :src="getRandomImage()"
+              :src="selectImageByRecipeId(recipe.id)"
               alt="Recipe Image"
               style="width: 100%; height: 200px; object-fit: cover"
             />
@@ -153,7 +153,7 @@
 import { useAuthStore } from '~/stores/auth';
 import { useNuxtApp } from '#app';
 
-const getRandomImage = () => useNuxtApp().$selectRandomImage();
+const selectImageByRecipeId = useNuxtApp().$selectImageByRecipeId;
 const authStore = useAuthStore();
 console.log(authStore.token);
 const searchQuery = ref('');
@@ -208,9 +208,11 @@ onMounted(() => {
 watch(
   () => route.query.query,
   (newQuery) => {
-    if (newQuery) {
+    if (newQuery !== '') {
       searchQuery.value = newQuery;
       console.log('URL changed, searching for:', searchQuery.value);
+      searchRecipes();
+    } else {
       searchRecipes();
     }
   }
