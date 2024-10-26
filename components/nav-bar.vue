@@ -127,6 +127,7 @@
 <script setup>
 import { reactive } from 'vue';
 import { useAuthStore } from '~/stores/auth';
+import { onMounted } from 'vue';
 
 const authStore = useAuthStore();
 const isLoggedIn = authStore.isLoggedIn;
@@ -221,24 +222,6 @@ const menuItems = reactive([
   },
 ]);
 const isAdmin = ref(false); // Replace with actual logic to determine if the user is an admin
-
-document.addEventListener('DOMContentLoaded', () => {
-  const userDropdownToggle = document.querySelector('#navbarDropdown');
-
-  userDropdownToggle.addEventListener('click', function () {
-    const menu = this.nextElementSibling;
-
-    setTimeout(() => {
-      const rect = menu.getBoundingClientRect();
-
-      if (rect.right > window.innerWidth) {
-        menu.classList.add('dropdown-menu-end'); // 超出屏幕右侧，则将菜单对齐到右侧
-      } else {
-        menu.classList.remove('dropdown-menu-end'); // 如果没有超出，则移除对齐
-      }
-    }, 0);
-  });
-});
 </script>
 
 <style scoped>
