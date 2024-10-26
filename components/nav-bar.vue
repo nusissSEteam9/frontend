@@ -52,7 +52,10 @@
             >
               <i class="bi bi-person-circle" style="font-size: 18px" />
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div
+              class="dropdown-menu dropdown-menu-end dropdown-menu-user"
+              aria-labelledby="navbarDropdown"
+            >
               <template v-if="!isAdmin">
                 <nuxt-link class="dropdown-item" to="/user/member/myProfile"
                   >My Profile
@@ -323,6 +326,12 @@ const isAdmin = ref(false); // Replace with actual logic to determine if the use
 .nav-item:hover .dropdown-menu {
   display: block;
   opacity: 1;
+}
+
+.nav-link.dropdown-toggle:hover + .dropdown-menu-user {
+  display: block;
+  right: 0;
+  left: auto;
 }
 
 .nav-item a:hover {
