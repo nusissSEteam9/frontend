@@ -1,5 +1,12 @@
 <template>
-  <form class="container" @submit.prevent="verify">
+  <form
+    class="container"
+    @submit.prevent="
+      () => {
+        verify(allCodes);
+      }
+    "
+  >
     <h2>Email Verification</h2>
     <div class="flex-box">
       <div class="form-group">
