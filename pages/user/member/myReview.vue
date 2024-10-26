@@ -22,15 +22,27 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(review, index) in reviews" :key="review.id">
+          <tr v-for="(review, index) in reviews" :key="review.reviewId">
             <th scope="row">{{ index + 1 }}</th>
-            <td>{{ review.id }}</td>
+            <td>{{ review.reviewId }}</td>
             <td>
-              <a :href="`/recipe/detail/${review.recipe.id}`">
-                {{ review.recipe.name }}
+              <a :href="`/recipe/detail/${review.recipeId}`">
+                {{ review.recipeName }}
               </a>
             </td>
-            <td>{{ review.rating }}</td>
+            <td>
+              <span
+                v-for="i in review.rating"
+                :key="i"
+                class="bi bi-star-fill"
+                :class="{ checked: i <= review.rating }"
+              ></span>
+              <span
+                v-for="i in 5 - review.rating"
+                :key="i"
+                class="bi bi-star"
+              ></span>
+            </td>
             <td>{{ review.comment }}</td>
           </tr>
         </tbody>
@@ -39,15 +51,29 @@
   </div>
 </template>
 
-<script setup>
-// Reactive state for reviews
-const reviews = ref([]);
+<script setup lang="ts">
+import { useAuthStore } from '~/stores/auth';
+const reviewExample = {
+  reviewId: 1,
+  recipeName: 'recipe1Name',
+  recipeId: 1,
+  rating: 0,
+  comment: 'testReview1',
+};
+const authStore = useAuthStore();
+const reviews = ref<(typeof reviewExample)[]>([]);
 
 // Function to fetch reviews
 const fetchReviews = async () => {
   try {
     // Replace with your actual API endpoint
-    reviews.value = await $fetch('/api/user/member/myReview');
+    reviews.value = await $fetch('/api/user/member/myReview', {
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
+    });
   } catch (error) {
     console.error('Error fetching reviews:', error);
     // Optionally, handle error (e.g., show a notification)
