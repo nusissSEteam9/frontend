@@ -7,7 +7,7 @@
     <!-- 搜索表单 -->
     <form id="searchForm" @submit.prevent="searchRecipes">
       <div style="align-items: center">
-        <div style="position: relative">
+        <div class="search-bar" style="position: relative">
           <input
             id="searchInput"
             v-model="searchQuery"
@@ -76,9 +76,9 @@
           </NuxtLink>
           <div class="card-body" style="min-height: 105px">
             <h5 class="card-title">
-              <NuxtLink :to="`/recipe/detail/${recipe.id}`">{{
-                recipe.name
-              }}</NuxtLink>
+              <NuxtLink :to="`/recipe/detail/${recipe.id}`"
+                >{{ recipe.name }}
+              </NuxtLink>
             </h5>
             <p
               class="card-text text-truncate"
@@ -155,7 +155,7 @@ import { useAuthStore } from '~/stores/auth';
 const authStore = useAuthStore();
 console.log(authStore.token);
 const searchQuery = ref('');
-const searchType = ref('');
+const searchType = ref('name'); // 设置默认值为第一个选项 'name'
 const filters = ref({
   healthScore: false,
   calorieIntake: false,
@@ -251,6 +251,15 @@ const updatePageSize = () => {
 </script>
 
 <style scoped>
+/* 搜索表单整体样式 */
+.search-bar {
+  display: flex; /* 使用 flex 布局，方便搜索框和按钮水平对齐 */
+  align-items: center; /* 垂直居中对齐 */
+  gap: 5px; /* 添加控件之间的间距 */
+  margin-top: 0;
+  justify-content: center;
+}
+
 a {
   color: rgb(0, 0, 0);
   text-decoration: none;
@@ -310,9 +319,20 @@ select {
   border-radius: 4px;
 }
 
+#searchInput,
+select,
+.button-style,
 #toggleButton {
-  margin-left: 10px;
-  margin-right: 10px;
+  height: 40px; /* 设置相同的高度 */
+  padding: 0 15px; /* 统一左右内边距 */
+  border-radius: 25px; /* 确保样式一致的圆角 */
+  border: 1px solid #ccc; /* 边框风格一致 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 轻微的阴影让元素更立体 */
+  outline: none; /* 点击时去除默认轮廓 */
+}
+
+#toggleButton {
+  margin-top: -10px; /* 让按钮单独向上移动 5px，具体值可以根据需要调整 */
 }
 
 textarea {
