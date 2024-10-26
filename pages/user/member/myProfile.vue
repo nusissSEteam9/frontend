@@ -305,7 +305,7 @@ button {
 
 @media (max-width: 992px) {
   .container {
-    max-width: 90%;
+    max-width: 92%;
   }
 }
 </style>
