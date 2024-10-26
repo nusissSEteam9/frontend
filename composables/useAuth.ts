@@ -109,7 +109,7 @@ export const useAuth = () => {
     password: string;
   }): Promise<string> => {
     try {
-      await $fetch<string>('/auth/verifyCode/success', {
+      await $fetch<string>('/api/auth/verifyCode/success', {
         baseURL: config.public.backendProxyUrl,
         method: 'POST',
         headers: {
