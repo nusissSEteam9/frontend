@@ -15,7 +15,6 @@
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">ID</th>
             <th scope="col">Recipe</th>
             <th scope="col">Rating</th>
             <th scope="col">Comment</th>
@@ -24,7 +23,6 @@
         <tbody>
           <tr v-for="(review, index) in reviews" :key="review.reviewId">
             <th scope="row">{{ index + 1 }}</th>
-            <td>{{ review.reviewId }}</td>
             <td>
               <a :href="`/recipe/detail/${review.recipeId}`">
                 {{ review.recipeName }}
@@ -124,8 +122,8 @@ h2 {
 }
 
 .table th {
-  background-color: #38b2ac;
-  color: #ffffff;
+  background-color: transparent;
+  color: #000000;
   font-weight: bold;
   border: 1px solid #d0d0d0;
 }
