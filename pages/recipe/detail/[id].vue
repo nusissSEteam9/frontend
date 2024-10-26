@@ -397,7 +397,7 @@ const submitReview = async () => {
     },
   };
   try {
-    await $fetch('/api/review/ceate', {
+    await $fetch('/api/review/create', {
       method: 'POST',
       baseURL: useRuntimeConfig().public.backendProxyUrl,
       headers: {

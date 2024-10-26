@@ -78,7 +78,7 @@ const submitReport = async () => {
       body: payload,
     });
     alert('Report submitted successfully.');
-    router.push('/success-page');
+    router.push('/user/profile/' + memberReportedId);
   } catch (error) {
     alert('Error submitting report.');
     console.error(error);

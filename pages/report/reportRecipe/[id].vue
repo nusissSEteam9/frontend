@@ -78,7 +78,7 @@ const submitReport = async () => {
       body: payload,
     });
     alert('Report submitted successfully.');
-    router.push('/success-page');
+    router.push('/recipe/detail/' + recipeReportedId);
   } catch (error) {
     alert('Error submitting report.');
     console.error(error);
