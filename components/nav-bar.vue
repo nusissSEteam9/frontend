@@ -42,7 +42,7 @@
               </nuxt-link>
             </div>
           </li>
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown nav-item-user">
             <a
               id="navbarDropdown"
               class="nav-link dropdown-toggle"
@@ -52,7 +52,11 @@
             >
               <i class="bi bi-person-circle" style="font-size: 18px" />
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div
+              class="dropdown-menu dropdown-menu-end dropdown-menu-user"
+              ref="dropdownMenu"
+              aria-labelledby="navbarDropdown"
+            >
               <template v-if="!isAdmin">
                 <nuxt-link class="dropdown-item" to="/user/member/myProfile"
                   >My Profile
@@ -124,6 +128,7 @@
 <script setup>
 import { reactive } from 'vue';
 import { useAuthStore } from '~/stores/auth';
+import { ref, onMounted, onUnmounted } from 'vue';
 
 const authStore = useAuthStore();
 const isLoggedIn = authStore.isLoggedIn;
@@ -218,6 +223,35 @@ const menuItems = reactive([
   },
 ]);
 const isAdmin = ref(false); // Replace with actual logic to determine if the user is an admin
+
+const dropdownMenu = ref(null); // 引用下拉菜单
+
+const handleDropdownPosition = () => {
+  // 检查菜单是否超出页面右侧
+  if (dropdownMenu.value) {
+    const rect = dropdownMenu.value.getBoundingClientRect();
+    const windowWidth = window.innerWidth;
+
+    if (rect.right > windowWidth) {
+      dropdownMenu.value.classList.add('dropdown-menu-end'); // 如果超出边界，添加右对齐类
+    } else {
+      dropdownMenu.value.classList.remove('dropdown-menu-end'); // 如果没有超出边界，移除右对齐类
+    }
+  }
+};
+
+onMounted(() => {
+  const dropdownToggle = document.getElementById('navbarDropdown');
+  dropdownToggle.addEventListener('mouseenter', handleDropdownPosition);
+  window.addEventListener('resize', handleDropdownPosition); // 当窗口大小改变时检测
+});
+
+onUnmounted(() => {
+  // 移除事件监听，防止内存泄漏
+  const dropdownToggle = document.getElementById('navbarDropdown');
+  dropdownToggle.removeEventListener('mouseenter', handleDropdownPosition);
+  window.removeEventListener('resize', handleDropdownPosition);
+});
 </script>
 
 <style scoped>
@@ -277,6 +311,7 @@ const isAdmin = ref(false); // Replace with actual logic to determine if the use
   text-transform: uppercase; /* 全部字母大写，保持一致风格 */
   padding: 10px 15px; /* 给导航栏链接增加内边距，增加点击区域 */
   transition: color 0.3s ease; /* 添加颜色变化的平滑过渡效果 */
+  border-radius: 5px;
 }
 
 .navbar a:hover {
@@ -295,6 +330,33 @@ const isAdmin = ref(false); // Replace with actual logic to determine if the use
   transition:
     background-color 0.3s ease,
     color 0.3s ease; /* 平滑过渡效果 */
+}
+
+.dropdown-menu-user {
+  padding: 0; /* 确保没有多余的内边距 */
+  margin: 0; /* 确保没有多余的外边距 */
+  font-size: 1rem; /* 字体大小与导航栏保持一致 */
+  font-weight: bold; /* 粗体文字 */
+  color: #2c7a7b; /* 设置与商标一致的颜色 */
+  text-transform: uppercase; /* 全部字母大写 */
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease; /* 平滑过渡效果 */
+  left: auto;
+  right: 0;
+}
+
+.nav-item-user:hover .dropdown-menu {
+  display: block;
+  opacity: 1;
+  left: auto;
+  right: 0;
+}
+
+.dropdown-menu-user:hover {
+  left: auto;
+  right: 0;
 }
 
 .dropdown-item {
@@ -331,13 +393,13 @@ const isAdmin = ref(false); // Replace with actual logic to determine if the use
   transition: background-color 0.3s ease;
 }
 
-.dropdown-submenu {
-  position: relative;
-}
-
 .dropdown-submenu .dropdown-menu {
   top: 0;
   left: 100%;
   margin-top: -1px;
+}
+.nav-item.dropdown:hover {
+  right: 0 !important;
+  left: auto !important;
 }
 </style>

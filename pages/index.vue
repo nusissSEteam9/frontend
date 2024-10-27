@@ -347,10 +347,41 @@ textarea {
 #filterMenu {
   display: none;
   position: fixed;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  padding: 10px;
+  background-color: #f9f9f9; /* 浅色背景，柔和的视觉效果 */
+  border: 1px solid #ddd; /* 边框颜色更淡 */
+  border-radius: 8px; /* 圆角边框 */
+  padding: 10px; /* 增加内边距，增加空间感 */
   z-index: 999;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 轻微阴影，增加立体感 */
+  width: 14%; /* 设置固定宽度，保持紧凑 */
+}
+
+#filterMenu label {
+  font-size: 14px; /* 较小字体，增强空间利用 */
+  color: #333; /* 深色字体，增强可读性 */
+}
+
+#filterMenu input[type='checkbox'] {
+  margin-right: 8px; /* 复选框与标签之间的间距 */
+}
+
+#filterMenu > *:not(:last-child) {
+  margin-bottom: 5px; /* Spacing between items */
+}
+
+/* 媒体查询：在更小的屏幕上进一步调整大小 */
+@media (max-width: 992px) {
+  #filterMenu {
+    width: 200px; /* 在小屏幕上进一步缩小宽度 */
+    padding: 10px; /* 减少内边距 */
+  }
+
+  #filterMenu label {
+    font-size: 12px; /* 再次缩小字体 */
+  }
+
+  #toggleButton {
+    font-size: 12px; /* 减小按钮字体 */
+  }
 }
 </style>
