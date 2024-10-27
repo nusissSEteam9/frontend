@@ -48,6 +48,10 @@
 <script setup>
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useAuthStore } from '~/stores/auth';
+
+const authStore = useAuthStore();
+console.log(authStore.token);
 
 const route = useRoute();
 const router = useRouter();
@@ -67,13 +71,14 @@ const submitReport = async () => {
   try {
     await $fetch('/api/report/reportMember', {
       method: 'POST',
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
       headers: {
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authStore.token}`,
       },
       body: payload,
     });
     alert('Report submitted successfully.');
-    router.push('/success-page');
+    router.push('/user/profile/' + memberReportedId);
   } catch (error) {
     alert('Error submitting report.');
     console.error(error);

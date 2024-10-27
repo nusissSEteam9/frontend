@@ -154,6 +154,10 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '~/stores/auth';
+
+const authStore = useAuthStore();
+console.log(authStore.token);
 
 // Reactive profile data
 const profile = reactive({
@@ -201,6 +205,10 @@ const checkUsername = async () => {
         `/api/user/validate-username/${profile.username}`,
         {
           method: 'GET',
+          baseURL: useRuntimeConfig().public.backendProxyUrl,
+          headers: {
+            Authorization: `Bearer ${authStore.token}`,
+          },
         }
       );
       if (exists) {
@@ -218,7 +226,13 @@ const checkUsername = async () => {
 
 const loadProfile = async () => {
   try {
-    const data = await $fetch('/api/user/member/myProfile');
+    const data = await $fetch('/api/user/member/myProfile', {
+      method: 'GET',
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
+    });
     Object.assign(profile, data);
     Object.assign(originalProfile, data);
     trackChanges();
@@ -244,8 +258,9 @@ const submitProfile = async () => {
   try {
     await $fetch('/api/user/member/saveProfile', {
       method: 'POST',
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
       headers: {
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authStore.token}`,
       },
       body: profile,
     });

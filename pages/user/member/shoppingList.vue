@@ -109,26 +109,17 @@ const config = useRuntimeConfig();
 // Fetch shopping list from an API on component mount
 onMounted(async () => {
   try {
-    const data = await $fetch('/api/user/member/shoppingList/view');
+    const data = await $fetch('/api/user/member/shoppingList/view', {
+      baseURL: config.public.backendProxyUrl,
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
+    });
     shoppingList.value = data;
   } catch (error) {
     console.error('Failed to load shopping list:', error);
   }
 });
-
-// onMounted(async () => {
-//   try {
-//     const data = await $fetch('/api/user/member/shoppingList/view', {
-//       baseURL: config.public.backendProxyUrl,
-//       headers: {
-//         Authorization: `Bearer ${authStore.token}`,
-//       },
-//     });
-//     shoppingList.value = data;
-//   } catch (error) {
-//     console.error('Failed to load shopping list:', error);
-//   }
-// });
 
 const toggleEditMode = () => {
   isEditMode.value = !isEditMode.value;
@@ -138,8 +129,9 @@ const deleteItems = async (ids) => {
   try {
     await $fetch('/api/user/member/shoppingList/clearItems', {
       method: 'POST',
+      baseURL: config.public.backendProxyUrl,
       headers: {
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authStore.token}`,
       },
       body: JSON.stringify({ ids }), // Pass the ids to the backend
     });
@@ -168,8 +160,9 @@ const addItem = async () => {
   try {
     const data = await fetch('/api/user/member/shoppingList/addItem', {
       method: 'POST',
+      baseURL: config.public.backendProxyUrl,
       headers: {
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authStore.token}`,
       },
       body: JSON.stringify({ ingredientName: newItemName.value }),
     });

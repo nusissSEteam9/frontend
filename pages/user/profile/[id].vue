@@ -101,7 +101,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useFetch } from 'nuxt/app';
+import { useAuthStore } from '~/stores/auth';
+
+const authStore = useAuthStore();
+console.log(authStore.token);
 
 const route = useRoute();
 const userId = route.params.id;
@@ -113,7 +116,13 @@ const itemsPerPage = 8;
 
 const fetchUserProfile = async () => {
   try {
-    const userData = await $fetch(`/api/user/profile/${userId}`);
+    const userData = await $fetch(`/api/user/profile/${userId}`, {
+      method: 'GET',
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
+    });
     member.value = userData.member;
     publicRecipes.value = userData.publicRecipes || [];
     isAdmin.value = userData.ifAdmin;

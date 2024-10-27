@@ -19,5 +19,6 @@ export default defineNuxtConfig({
   pinia: {
     storesDirs: ['~/stores/**'],
   },
+  plugins: ['~/plugins/imageSelector.js'],
   css: ['@/assets/css/global.css', 'bootstrap-icons/font/bootstrap-icons.css'],
 });

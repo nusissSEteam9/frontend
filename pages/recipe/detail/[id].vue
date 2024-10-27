@@ -52,7 +52,7 @@
         <tr>
           <td>
             <img
-              :src="`/images/${recipe.image}`"
+              :src="selectImageByRecipeId(recipe.id)"
               alt="Recipe Image"
               style="
                 width: 350px;
@@ -68,7 +68,8 @@
               <button
                 type="button"
                 class="btn btn-primary"
-                @click="goToReview(recipe.id)"
+                @click="toggleReviewForm"
+                v-if="!showReviewForm"
               >
                 Add Review</button
               >&nbsp;&nbsp;
@@ -270,6 +271,63 @@
         </div>
       </div>
     </div>
+    <br /><br />
+    <!-- Review Form -->
+    <div v-if="showReviewForm" style="margin-top: 20px">
+      <h4><b>Submit Your Review</b></h4>
+      <form @submit.prevent="submitReview">
+        <div class="form-group">
+          <label for="rating">Rating:</label>
+          <!-- Star Rating Input -->
+          <div class="star-rating-input" style="font-size: 24px">
+            <span
+              v-for="i in 5"
+              :key="i"
+              @click="setRating(i)"
+              @mouseover="hoverRating = i"
+              @mouseleave="hoverRating = null"
+              style="cursor: pointer"
+            >
+              <i
+                :class="
+                  i <= (hoverRating || newReview.rating)
+                    ? 'bi bi-star-fill'
+                    : 'bi bi-star'
+                "
+                style="color: gold"
+              ></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="comment">Comment:</label>
+          <textarea
+            v-model="newReview.comment"
+            id="comment"
+            class="form-control"
+            rows="5"
+            required
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-success"
+          style="margin-top: 10px; margin-right: 10px"
+        >
+          Submit Review
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          style="margin-top: 10px"
+          @click="toggleReviewForm"
+        >
+          Cancel
+        </button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -277,7 +335,9 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
+import { useNuxtApp } from '#app';
 
+const selectImageByRecipeId = useNuxtApp().$selectImageByRecipeId;
 const authStore = useAuthStore();
 console.log(authStore.token);
 const route = useRoute();
@@ -288,6 +348,13 @@ const reviews = ref([]);
 const isSaved = ref(false); // 假设从API得知用户是否已保存此食谱
 const createdBy = ref('');
 const createdByUserId = ref(null);
+const hoverRating = ref(null);
+
+const showReviewForm = ref(false);
+const newReview = ref({
+  rating: '',
+  comment: '',
+});
 
 const fetchRecipeDetails = async () => {
   const recipeData = await $fetch(`/api/recipe/detail/${recipeId}`, {
@@ -313,18 +380,73 @@ const getHealthScoreColor = (score) => {
   return 'red';
 };
 
-const goToReview = (id) => {
-  window.location.href = `/recipe/review/${id}`;
+const toggleReviewForm = () => {
+  showReviewForm.value = !showReviewForm.value;
 };
 
-const saveRecipe = (id) => {
-  // API 调用保存食谱
+const setRating = (rating) => {
+  newReview.value.rating = rating;
+};
+
+const submitReview = async () => {
+  const payload = {
+    rating: newReview.value.rating,
+    comment: newReview.value.comment,
+    recipe: {
+      id: recipeId,
+    },
+  };
+  try {
+    await $fetch('/api/review/create', {
+      method: 'POST',
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
+      body: payload,
+    });
+    fetchRecipeDetails();
+    newReview.value = {
+      rating: '',
+      comment: '',
+    };
+    showReviewForm.value = false;
+    alert('Review submitted successfully.');
+  } catch (error) {
+    alert('Error submitting review.');
+    console.error(error);
+  }
+};
+
+const saveRecipe = async () => {
+  try {
+    await $fetch(`/api/user/member/saveRecipe/${recipeId}`, {
+      method: 'POST',
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
+    });
+    isSaved.value = true;
+  } catch (error) {
+    console.error(error);
+  }
   isSaved.value = true;
 };
 
-const unsaveRecipe = (id) => {
-  // API 调用取消保存食谱
-  isSaved.value = false;
+const unsaveRecipe = async () => {
+  try {
+    await $fetch(`/api/user/member/removeSavedRecipe/${recipeId}`, {
+      method: 'POST',
+      baseURL: useRuntimeConfig().public.backendProxyUrl,
+      headers: {
+        Authorization: `Bearer ${authStore.token}`,
+      },
+    });
+    isSaved.value = false;
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const reportRecipe = (id) => {
@@ -351,6 +473,17 @@ a {
 .two-thirds-column {
   width: 65%;
   float: left;
+}
+
+.star-rating-input i {
+  font-size: 24px;
+  cursor: pointer;
+  color: gold;
+}
+
+.star-rating-input i:hover,
+.star-rating-input i.bi-star-fill {
+  color: orange;
 }
 
 /* table {
