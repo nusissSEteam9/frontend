@@ -348,7 +348,7 @@ textarea {
   padding: 10px; /* 增加内边距，增加空间感 */
   z-index: 999;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 轻微阴影，增加立体感 */
-  width: 14%; /* 设置固定宽度，保持紧凑 */
+  width: 240px; /* 设置固定宽度，保持紧凑 */
 }
 
 #filterMenu label {
