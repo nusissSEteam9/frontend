@@ -128,7 +128,6 @@
 <script setup>
 import { reactive } from 'vue';
 import { useAuthStore } from '~/stores/auth';
-import { ref, onMounted, onUnmounted } from 'vue';
 
 const authStore = useAuthStore();
 const isLoggedIn = authStore.isLoggedIn;
@@ -223,35 +222,6 @@ const menuItems = reactive([
   },
 ]);
 const isAdmin = ref(false); // Replace with actual logic to determine if the user is an admin
-
-const dropdownMenu = ref(null); // 引用下拉菜单
-
-const handleDropdownPosition = () => {
-  // 检查菜单是否超出页面右侧
-  if (dropdownMenu.value) {
-    const rect = dropdownMenu.value.getBoundingClientRect();
-    const windowWidth = window.innerWidth;
-
-    if (rect.right > windowWidth) {
-      dropdownMenu.value.classList.add('dropdown-menu-end'); // 如果超出边界，添加右对齐类
-    } else {
-      dropdownMenu.value.classList.remove('dropdown-menu-end'); // 如果没有超出边界，移除右对齐类
-    }
-  }
-};
-
-onMounted(() => {
-  const dropdownToggle = document.getElementById('navbarDropdown');
-  dropdownToggle.addEventListener('mouseenter', handleDropdownPosition);
-  window.addEventListener('resize', handleDropdownPosition); // 当窗口大小改变时检测
-});
-
-onUnmounted(() => {
-  // 移除事件监听，防止内存泄漏
-  const dropdownToggle = document.getElementById('navbarDropdown');
-  dropdownToggle.removeEventListener('mouseenter', handleDropdownPosition);
-  window.removeEventListener('resize', handleDropdownPosition);
-});
 </script>
 
 <style scoped>
@@ -398,6 +368,7 @@ onUnmounted(() => {
   left: 100%;
   margin-top: -1px;
 }
+
 .nav-item.dropdown:hover {
   right: 0 !important;
   left: auto !important;
