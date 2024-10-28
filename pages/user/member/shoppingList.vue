@@ -158,7 +158,7 @@ const deleteSelectedItems = async () => {
 const addItem = async () => {
   if (!newItemName.value) return; // Avoid adding empty items
   try {
-    const data = await fetch('/api/user/member/shoppingList/addItem', {
+    const data = await $fetch('/api/user/member/shoppingList/addItem', {
       method: 'POST',
       baseURL: config.public.backendProxyUrl,
       headers: {
