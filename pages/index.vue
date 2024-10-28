@@ -42,14 +42,6 @@
             <label for="filter2" style="display: inline-block"
               >&nbsp;Based on my calorie intake</label
             >
-            <input
-              id="filter2"
-              v-model="filters.calorieIntake"
-              type="checkbox"
-            />
-            <label for="filter2" style="display: inline-block"
-              >&nbsp;Based on my calorie intake</label
-            >
           </div>
           <button
             type="submit"
