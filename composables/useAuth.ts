@@ -62,37 +62,32 @@ export const useAuth = () => {
     message: string;
     code: string;
   }> => {
-    const res = await $fetch<RegisterResponse>('/api/auth/register', {
-      baseURL: config.public.backendProxyUrl,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: form,
-      // Handle successful responses
-      onResponse({ request, response }) {
-        const authHeader = response.headers.get('Authorization');
-        if (authHeader && authHeader.startsWith('Bearer ')) {
-          const token = authHeader.split(' ')[1];
-          authStore.setToken(token);
-        }
-      },
-      // Handle error responses
-      onResponseError: async ({ request, response }) => {
-        console.log('response', response);
-        const errorData = response._data;
-        // Throw a new error with the message from the backend
-        throw new InvalidateInfoError(
-          errorData.message || 'An error occurred during registration.'
-        );
-      },
-    });
-
-    // If the request is successful, return the desired data
-    return {
-      message: res.message,
-      code: res.verifyCode || '',
-    };
+    try {
+      const res = await $fetch<RegisterResponse>('/api/auth/register', {
+        baseURL: config.public.backendProxyUrl,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: form,
+        // Handle successful responses
+        onResponse({ request, response }) {
+          const authHeader = response.headers.get('Authorization');
+          if (authHeader && authHeader.startsWith('Bearer ')) {
+            const token = authHeader.split(' ')[1];
+            authStore.setToken(token);
+          }
+        },
+      });
+      // If the request is successful, return the desired data
+      return {
+        message: res.message,
+        code: res.verifyCode || '',
+      };
+    } catch (error: any) {
+      console.log(error, 'error');
+      throw error.data?.message || 'An error occurred during registration.';
+    }
   };
 
   /**

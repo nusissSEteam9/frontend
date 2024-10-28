@@ -155,7 +155,6 @@ import { useNuxtApp } from '#app';
 
 const selectImageByRecipeId = useNuxtApp().$selectImageByRecipeId;
 const authStore = useAuthStore();
-console.log(authStore.token);
 const searchQuery = ref('');
 const searchType = ref('name'); // 设置默认值为第一个选项 'name'
 const filters = ref({

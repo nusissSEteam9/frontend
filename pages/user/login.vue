@@ -65,7 +65,7 @@ const handleSubmit = async () => {
     await auth.login(username.value, password.value);
     router.push('/');
   } catch (error) {
-    errorMessage.value = error.response.data.message;
+    errorMessage.value = 'Invalid username or password';
   }
 };
 </script>
