@@ -130,7 +130,7 @@ import { reactive } from 'vue';
 import { useAuthStore } from '~/stores/auth';
 
 const authStore = useAuthStore();
-const isLoggedIn = authStore.isLoggedIn;
+const isLoggedIn = computed(() => authStore.isLoggedIn);
 const logout = () => {
   useAuthStore().logout();
   navigateTo('/user/login');

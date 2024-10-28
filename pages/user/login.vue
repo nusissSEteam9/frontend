@@ -52,6 +52,8 @@
   </div>
 </template>
 <script setup>
+import InvalidateInfoError from '~/utils/invalidateInfoError';
+
 definePageMeta({
   middleware: 'signin',
 });
@@ -65,7 +67,11 @@ const handleSubmit = async () => {
     await auth.login(username.value, password.value);
     router.push('/');
   } catch (error) {
-    errorMessage.value = 'Invalid username or password';
+    if (error instanceof InvalidateInfoError) {
+      errorMessage.value = error.message;
+    } else {
+      errorMessage.value = 'An error occurred. Please try again later.';
+    }
   }
 };
 </script>

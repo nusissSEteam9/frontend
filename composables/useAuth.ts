@@ -78,6 +78,12 @@ export const useAuth = () => {
             authStore.setToken(token);
           }
         },
+        onResponseError({ request, response }) {
+          // Handle error responses
+          response.text().then((text) => {
+            throw new InvalidateInfoError(text);
+          });
+        },
       });
       // If the request is successful, return the desired data
       return {
