@@ -31,6 +31,9 @@
                     type="password"
                     required
                   />
+                  <span v-if="errorMessage" class="text-danger">{{
+                    errorMessage
+                  }}</span>
                 </div>
                 <div class="d-grid gap-1">
                   <button type="submit" class="btn btn-primary btn-success">
