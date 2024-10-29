@@ -180,6 +180,15 @@ const addItem = async () => {
 </script>
 
 <style scoped>
+/* Header Styling */
+h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000000;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 1rem;
+}
 .shopping-cart {
   background-color: #ffffff;
   padding: 20px;
