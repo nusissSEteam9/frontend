@@ -86,7 +86,7 @@ const submitReport = async () => {
 };
 
 const cancelReport = () => {
-  router.push('/');
+  router.back();
 };
 </script>
 

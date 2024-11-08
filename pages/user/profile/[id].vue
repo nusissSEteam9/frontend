@@ -45,7 +45,7 @@
             <NuxtLink :to="`/recipe/detail/${recipe.id}`">
               <img
                 class="card-img-top"
-                :src="`/images/${recipe.image}`"
+                :src="selectImageByRecipeId(recipe.id)"
                 alt="Recipe Image"
                 style="width: 100%; height: 200px; object-fit: cover"
               />
@@ -102,6 +102,9 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
+import { useNuxtApp } from '#app';
+
+const selectImageByRecipeId = useNuxtApp().$selectImageByRecipeId;
 
 const authStore = useAuthStore();
 console.log(authStore.token);

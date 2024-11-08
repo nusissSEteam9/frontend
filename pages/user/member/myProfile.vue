@@ -27,7 +27,8 @@
               @blur="checkUsername"
               class="form-control"
               :class="{ 'is-invalid': userAlrExistError }"
-              @input="trackChanges"
+              @input="handleChenges"
+              :disabled="!isEditMode"
               required
             />
             <div class="invalid-feedback">
@@ -45,6 +46,7 @@
               class="form-control"
               :class="{ 'is-invalid': errors.password }"
               @input="trackChanges"
+              :disabled="!isEditMode"
               required
             />
             <div class="invalid-feedback">
@@ -62,6 +64,8 @@
               class="form-control"
               :class="{ 'is-invalid': errors.email }"
               @input="trackChanges"
+              :disabled="!isEditMode"
+              required
             />
             <div class="invalid-feedback">
               {{ errors.email }}
@@ -77,6 +81,7 @@
               v-model="profile.birthdate"
               class="form-control"
               @input="trackChanges"
+              :disabled="!isEditMode"
               required
             />
           </div>
@@ -89,6 +94,7 @@
               v-model="profile.gender"
               class="form-select"
               @change="trackChanges"
+              :disabled="!isEditMode"
               required
             >
               <option value="" disabled>Select your gender</option>
@@ -107,6 +113,7 @@
               v-model="profile.height"
               class="form-control"
               @input="trackChanges"
+              :disabled="!isEditMode"
               required
             />
           </div>
@@ -121,13 +128,15 @@
               step=".1"
               class="form-control"
               @input="trackChanges"
+              :disabled="!isEditMode"
               required
             />
           </div>
 
           <!-- Buttons -->
-          <div class="d-flex justify-content-between mt-4">
+          <div class="d-flex mt-4">
             <button
+              v-if="isEditMode"
               type="submit"
               class="btn btn-primary"
               :class="{
@@ -137,6 +146,16 @@
             >
               <i class="bi bi-save"></i> Save
             </button>
+
+            <button
+              v-if="!isEditMode"
+              type="button"
+              class="btn btn-warning"
+              @click="toggleEditMode"
+            >
+              <i class="bi bi-pencil"></i> Edit
+            </button>
+
             <button
               type="button"
               class="btn btn-secondary"
@@ -158,6 +177,8 @@ import { useAuthStore } from '~/stores/auth';
 
 const authStore = useAuthStore();
 console.log(authStore.token);
+// State to control edit mode
+const isEditMode = ref(false);
 
 // Reactive profile data
 const profile = reactive({
@@ -187,16 +208,15 @@ const errors = reactive({
 
 // For username validation
 const userAlrExistError = ref('');
-
-// 是否有修改标志
 const hasChanges = ref(false);
+const usernameChanged = ref(false);
 
 // Router for redirection
 const router = useRouter();
 
 // Function to check if the username already exists
 const checkUsername = async () => {
-  if (!hasChanges) {
+  if (!usernameChanged.value || !isEditMode) {
     return;
   }
   try {
@@ -224,6 +244,11 @@ const checkUsername = async () => {
   }
 };
 
+// Function to toggle edit mode
+const toggleEditMode = () => {
+  isEditMode.value = !isEditMode.value;
+};
+
 const loadProfile = async () => {
   try {
     const data = await $fetch('/api/user/member/myProfile', {
@@ -241,11 +266,21 @@ const loadProfile = async () => {
   }
 };
 
+const handleChenges = () => {
+  trackChanges();
+  trackUsernameChanges();
+};
+
 // Function to track changes in the form
 const trackChanges = () => {
   hasChanges.value =
     JSON.stringify(profile) !== JSON.stringify(originalProfile);
   console.log('hasChanges:', hasChanges.value);
+};
+
+const trackUsernameChanges = () => {
+  usernameChanged.value = profile.username !== originalProfile.username;
+  console.log('usernameChanged:', usernameChanged.value);
 };
 
 // Function to handle form submission
@@ -268,7 +303,7 @@ const submitProfile = async () => {
     alert('Profile saved successfully!');
     Object.assign(originalProfile, profile);
     hasChanges.value = false;
-    router.push('/'); // 成功后跳转到主页
+    isEditMode.value = false;
   } catch (error) {
     console.error('Error saving profile:', error);
     alert('Failed to save profile.');
@@ -278,7 +313,7 @@ const submitProfile = async () => {
 const cancelChange = () => {
   Object.assign(profile, originalProfile);
   hasChanges.value = false;
-  router.back();
+  isEditMode.value = false;
 };
 
 onMounted(() => {

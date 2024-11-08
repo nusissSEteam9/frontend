@@ -4,12 +4,12 @@
     <h2 class="mb-4">My Recipes</h2>
 
     <!-- Button to Add Recipe -->
-    <div class="d-flex justify-content-end mb-4">
+    <div class="d-flex mb-4">
       <button class="btn btn-primary" @click="goToCreateRecipe">
         Add Recipe
       </button>
     </div>
-
+    <hr />
     <!-- Display message if no recipes exist -->
     <p v-if="recipes.length === 0" class="text-center">No Recipes Created</p>
 
@@ -113,6 +113,7 @@ const promptDelete = async (id) => {
     try {
       await $fetch(`/api/recipe/${id}`, {
         method: 'DELETE',
+        baseURL: useRuntimeConfig().public.backendProxyUrl,
       });
       // 从本地移除已删除的菜谱
       recipes.value = recipes.value.filter((recipe) => recipe.id !== id);

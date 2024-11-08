@@ -25,23 +25,21 @@
             type="button"
             class="button-style"
             @click="toggleMenu"
+            @mouseenter="toggleMenu"
           >
             ☰
           </button>
-          <div id="filterMenu" class="filter-menu" style="text-align: left">
+          <div
+            id="filterMenu"
+            class="filter-menu"
+            style="text-align: left"
+            @mouseleave="toggleMenu"
+          >
             <input id="filter1" v-model="filters.healthScore" type="checkbox" />
             <label for="filter1" style="display: inline-block"
               >&nbsp;Health Score ≥ 4</label
             >
             <br />
-            <input
-              id="filter2"
-              v-model="filters.calorieIntake"
-              type="checkbox"
-            />
-            <label for="filter2" style="display: inline-block"
-              >&nbsp;Based on my calorie intake</label
-            >
             <input
               id="filter2"
               v-model="filters.calorieIntake"
