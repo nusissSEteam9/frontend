@@ -386,6 +386,7 @@ const tagsErrorMessage = ref('');
 const pictureInputErrorMessage = ref('');
 const imagePreview = ref(null);
 const router = useRouter();
+const selectedFile = ref(null);
 
 // Add ingredient to the list
 const addIngredient = async () => {
@@ -447,6 +448,15 @@ const addIngredient = async () => {
 
 // Remove ingredient
 const removeIngredient = (index) => {
+  recipe.value.nutrition.calories -= recipe.value.ingredients[index].calories;
+  recipe.value.nutrition.carbohydrate -=
+    recipe.value.ingredients[index].carbohydrate;
+  recipe.value.nutrition.fat -= recipe.value.ingredients[index].fat;
+  recipe.value.nutrition.protein -= recipe.value.ingredients[index].protein;
+  recipe.value.nutrition.saturated_fat -=
+    recipe.value.ingredients[index].saturated_fat;
+  recipe.value.nutrition.sodium -= recipe.value.ingredients[index].sodium;
+  recipe.value.nutrition.sugar -= recipe.value.ingredients[index].sugar;
   recipe.value.ingredients.splice(index, 1);
 };
 
@@ -492,11 +502,16 @@ const removeTag = (index) => {
 const previewImage = (event) => {
   const file = event.target.files[0];
   if (file) {
+    if (file.size > 2 * 1024 * 1024) {
+      pictureInputErrorMessage.value = 'Image size must be less than 2MB.';
+      return;
+    }
+    pictureInputErrorMessage.value = '';
+    selectedFile.value = file;
     const reader = new FileReader();
     reader.onload = (e) => {
       imagePreview.value = e.target.result;
     };
-    recipe.value.image = file.name;
     reader.readAsDataURL(file);
   }
 };
@@ -536,6 +551,25 @@ const submitForm = async () => {
       image: recipe.value.image,
     };
     console.log('Submitting recipe:', JSON.stringify(payload));
+
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile.value);
+      const data = await $fetch('/api/recipe/uploadImage', {
+        baseURL: useRuntimeConfig().public.backendProxyUrl,
+        method: 'POST',
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${authStore.token}`,
+        },
+      });
+      console.log(data.url);
+      payload.image = data.url;
+    } catch (error) {
+      console.error('Failed to save image', error);
+      alert('Failed to save recipe.');
+      return;
+    }
 
     try {
       await $fetch('/api/recipe/create', {
