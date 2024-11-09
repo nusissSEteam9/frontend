@@ -152,11 +152,6 @@ const submitForm = async () => {
 </script>
 
 <style scoped>
-.container {
-  width: 60%;
-  margin: auto;
-}
-
 button {
   border-radius: 4px;
 }
@@ -164,5 +159,89 @@ button {
 img {
   max-width: 300px;
   max-height: 300px;
+}
+
+/* 容器样式 */
+.container {
+  width: 60%;
+  background-color: #f6f7f8;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 标题样式 */
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 表单标签样式 */
+.form-group label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #555555;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* 输入框和文本区域样式 */
+.form-group input[type='text'],
+.form-group input[type='number'],
+.form-group textarea {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  color: #333333;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+  resize: none;
+}
+
+/* 文件上传按钮样式 */
+.form-group input[type='file'] {
+  font-size: 14px;
+  color: #333333;
+}
+
+/* 错误信息样式 */
+#pictureInputErrorMessage {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* 图片预览样式 */
+#picturePreview img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+/* 提交按钮样式 */
+button[type='submit'] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #28a745;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type='submit']:hover {
+  background-color: #218838;
 }
 </style>

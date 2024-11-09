@@ -1,6 +1,7 @@
 <template>
   <div>
     <nav-bar></nav-bar>
-    <slot />
+    <NuxtPage />
   </div>
 </template>
+<script setup lang="ts"></script>

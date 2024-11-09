@@ -31,6 +31,9 @@
                     type="password"
                     required
                   />
+                  <span v-if="errorMessage" class="text-danger">{{
+                    errorMessage
+                  }}</span>
                 </div>
                 <div class="d-grid gap-1">
                   <button type="submit" class="btn btn-primary btn-success">
@@ -52,6 +55,8 @@
   </div>
 </template>
 <script setup>
+import InvalidateInfoError from '~/utils/invalidateInfoError';
+
 definePageMeta({
   middleware: 'signin',
 });
@@ -65,7 +70,11 @@ const handleSubmit = async () => {
     await auth.login(username.value, password.value);
     router.push('/');
   } catch (error) {
-    errorMessage.value = error.response.data.message;
+    if (error instanceof InvalidateInfoError) {
+      errorMessage.value = error.message;
+    } else {
+      errorMessage.value = 'An error occurred. Please try again later.';
+    }
   }
 };
 </script>

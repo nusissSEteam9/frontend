@@ -39,11 +39,18 @@ export const useAuth = () => {
             authStore.setToken(token);
           }
         },
+        onResponseError: async ({ request, response }) => {
+          const errorMessage = response._data;
+          console.log('errorMessage', errorMessage);
+          throw new InvalidateInfoError(
+            errorMessage || 'An error occurred during login.'
+          );
+        },
       });
       // Redirect to home after successful login
       navigateTo('/');
     } catch (error: any) {
-      throw error.data?.message || 'An error occurred during login.';
+      throw error;
     }
   };
 
@@ -80,10 +87,10 @@ export const useAuth = () => {
       // Handle error responses
       onResponseError: async ({ request, response }) => {
         console.log('response', response);
-        const errorData = response._data;
+        const errorMessage = response._data;
         // Throw a new error with the message from the backend
         throw new InvalidateInfoError(
-          errorData.message || 'An error occurred during registration.'
+          errorMessage.message || 'An error occurred during registration.'
         );
       },
     });
