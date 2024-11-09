@@ -21,7 +21,7 @@
           <!-- Recipe Image -->
           <NuxtLink :to="`/recipe/detail/${recipe.id}`">
             <img
-              :src="selectImageByRecipeId(recipe.id)"
+              :src="recipe.image ? recipe.image : '/images/recipe01.jpg'"
               class="card-img-top"
               alt="Recipe Image"
               style="height: 200px; object-fit: cover"
@@ -30,11 +30,13 @@
           <!-- Card Body -->
           <div class="card-body">
             <h5 class="card-title">
-              <NuxtLink :to="`/recipe/detail/${recipe.id}`">{{
-                recipe.name
-              }}</NuxtLink>
+              <NuxtLink
+                :to="`/recipe/detail/${recipe.id}`"
+                class="card-title-link"
+                ><b>{{ recipe.name }}</b></NuxtLink
+              >
             </h5>
-            <p class="card-text text-truncate">{{ recipe.description }}</p>
+            <p class="card-text">{{ recipe.description }}</p>
           </div>
           <!-- Card Footer Buttons -->
           <ul class="list-group list-group-flush">
@@ -63,9 +65,6 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
-import { useNuxtApp } from '#app';
-
-const selectImageByRecipeId = useNuxtApp().$selectImageByRecipeId;
 
 const authStore = useAuthStore();
 console.log(authStore.token);
@@ -150,16 +149,31 @@ h2 {
   transition: box-shadow 0.3s ease;
 }
 
-.card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.card {
+  transition: transform 0.2s;
 }
 
-.text-truncate {
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+.card-title-link {
+  text-decoration: none;
+  color: inherit;
+}
+.card-title-link:hover {
+  color: #007bff;
+}
+
+.card-text {
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2; /* Limits the description to 2 lines */
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis; /* Adds ellipsis if text overflows */
+  height: 2.6em;
+  line-height: 1.3em;
 }
 
 a {

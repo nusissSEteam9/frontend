@@ -70,7 +70,7 @@
         <!-- Recipe Image and Actions -->
         <div class="col-md-6">
           <img
-            :src="selectImageByRecipeId(recipe.id)"
+            :src="recipe.image ? recipe.image : '/images/recipe01.jpg'"
             alt="Recipe Image"
             class="img-fluid rounded shadow-sm"
           />
@@ -305,9 +305,7 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
-import { useNuxtApp } from '#app';
 
-const selectImageByRecipeId = useNuxtApp().$selectImageByRecipeId;
 const authStore = useAuthStore();
 console.log(authStore.token);
 const route = useRoute();
@@ -335,7 +333,7 @@ const fetchRecipeDetails = async () => {
     },
   });
   recipe.value = recipeData.recipe || {};
-  reviews.value = recipeData.reviews || [];
+  reviews.value = recipeData.recipe.reviews || [];
   createdBy.value = recipeData.createdBy || 'Unknown';
   createdByUserId.value = recipeData.createdByUserId || null;
   isSaved.value = recipeData.isSaved || false;

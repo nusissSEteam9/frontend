@@ -5,7 +5,11 @@
   >
     <title>Home</title>
     <!-- 搜索表单 -->
-    <form id="searchForm" @submit.prevent="searchRecipes">
+    <form
+      id="searchForm"
+      @submit.prevent="searchRecipes"
+      style="margin-bottom: 50px"
+    >
       <div style="align-items: center">
         <div class="search-bar" style="position: relative">
           <input
@@ -61,27 +65,26 @@
     </form>
 
     <!-- 搜索结果 -->
-    <div v-if="recipes.length > 0" class="row">
+    <div v-if="recipes.length > 0" class="row row-cols-1 row-cols-md-4 g-4">
       <div v-for="recipe in recipes" :key="recipe.id" class="col-md-3">
-        <div class="card mt-5" style="width: 18rem">
+        <div class="card h-100" style="width: 18rem">
           <NuxtLink :to="`/recipe/detail/${recipe.id}`">
             <img
               class="card-img-top"
-              :src="selectImageByRecipeId(recipe.id)"
+              :src="recipe.image ? recipe.image : '/images/recipe01.jpg'"
               alt="Recipe Image"
               style="width: 100%; height: 200px; object-fit: cover"
             />
           </NuxtLink>
           <div class="card-body" style="min-height: 105px">
-            <h5 class="card-title">
-              <NuxtLink :to="`/recipe/detail/${recipe.id}`"
-                >{{ recipe.name }}
+            <h5>
+              <NuxtLink
+                :to="`/recipe/detail/${recipe.id}`"
+                class="card-title-link"
+                ><b>{{ recipe.name }}</b>
               </NuxtLink>
             </h5>
-            <p
-              class="card-text text-truncate"
-              style="max-height: 3.6em; overflow: hidden"
-            >
+            <p class="card-text">
               {{ recipe.description }}
             </p>
           </div>
@@ -149,9 +152,7 @@
 
 <script setup>
 import { useAuthStore } from '~/stores/auth';
-import { useNuxtApp } from '#app';
 
-const selectImageByRecipeId = useNuxtApp().$selectImageByRecipeId;
 const authStore = useAuthStore();
 const searchQuery = ref('');
 const searchType = ref('name'); // 设置默认值为第一个选项 'name'
@@ -261,9 +262,44 @@ const updatePageSize = () => {
   justify-content: center;
 }
 
+.container {
+  width: 90%;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 a {
   color: rgb(0, 0, 0);
   text-decoration: none;
+}
+
+.card {
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-title-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-title-link:hover {
+  color: #007bff;
+}
+
+.card-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limits the description to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Adds ellipsis if text overflows */
+  height: 2.6em;
+  line-height: 1.3em;
 }
 
 .custom-select-no-arrow {
