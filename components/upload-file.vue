@@ -12,13 +12,12 @@
       Upload Progress: {{ uploadProgress }}%
       <progress :value="uploadProgress" max="100"></progress>
     </div>
-    <img v-if="uploadSuccess" :src="fileLink" alt="no image" />
+    <img :src="fileLink" alt="Uploaded File" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-
+const s3 = useS3();
 const selectedFile = ref<undefined | File>(undefined);
 const fileLink = ref('');
 const isUploading = ref(false);
@@ -57,52 +56,14 @@ const uploadFile = async () => {
     alert('Please select a file first.');
     return;
   }
-
-  isUploading.value = true;
-  uploadSuccess.value = false;
-  errorMessage.value = '';
-  uploadProgress.value = 0;
-
-  try {
-    const presignedUrl = await useS3().getPresignedUrl(selectedFile.value);
-    if (!presignedUrl) {
-      errorMessage.value = 'Failed to get a presigned URL. Please try again.';
-      isUploading.value = false;
-      return;
-    }
-    // Step 2: Upload the file to S3 using XMLHttpRequest for progress
-    const xhr = new XMLHttpRequest();
-
-    xhr.open('PUT', presignedUrl, true);
-    xhr.setRequestHeader('Content-Type', selectedFile.value.type);
-
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        uploadProgress.value = Math.round((event.loaded / event.total) * 100);
-      }
-    };
-
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        uploadSuccess.value = true;
-        fileLink.value = presignedUrl.split('?')[0];
-      } else {
-        errorMessage.value = 'Failed to upload the file. Please try again.';
-      }
-      isUploading.value = false;
-    };
-
-    xhr.onerror = () => {
-      errorMessage.value = 'Failed to upload the file. Please try again.';
-      isUploading.value = false;
-    };
-
-    xhr.send(selectedFile.value);
-  } catch (error) {
-    console.error('Upload Error:', error);
-    errorMessage.value = 'Failed to upload the file. Please try again.';
-    isUploading.value = false;
-  }
+  s3.uploadFile(
+    isUploading,
+    uploadSuccess,
+    errorMessage,
+    uploadProgress,
+    fileLink,
+    selectedFile.value
+  );
 };
 </script>
 
@@ -127,5 +88,9 @@ progress {
   width: 100%;
   height: 20px;
   margin-top: 10px;
+}
+img {
+  max-width: 300px;
+  max-height: 300px;
 }
 </style>

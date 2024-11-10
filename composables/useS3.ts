@@ -4,9 +4,9 @@ export const useS3 = () => {
   const getPresignedUrl = async (selectedFile: File) => {
     try {
       const response = await $fetch<{ url: string }>(
-        `/recipe/presigned-url/healthy-recipe-images/${selectedFile.name}`,
+        `/api/recipe/presigned-url/healthy-recipe-images/${selectedFile.name}`,
         {
-          baseURL: `http://localhost:8080/api`,
+          baseURL: `http://localhost:8080`,
           method: 'GET',
           headers: {
             Authorization: `Bearer ${authStore.token}`,
@@ -18,37 +18,57 @@ export const useS3 = () => {
       console.error('Get Presigned URL Error:', error);
     }
   };
+  const uploadFile = async (
+    isUploading: Ref<boolean>,
+    uploadSuccess: Ref<boolean>,
+    errorMessage: Ref<string>,
+    uploadProgress: Ref<number>,
+    fileLink: Ref<string>,
+    selectedFile: File
+  ) => {
+    isUploading.value = true;
+    uploadSuccess.value = false;
+    errorMessage.value = '';
+    uploadProgress.value = 0;
 
-  const uploadFile = async (selectedFile: File) => {
     try {
-      const presignedUrl = await getPresignedUrl(selectedFile);
+      const presignedUrl = await useS3().getPresignedUrl(selectedFile);
       if (!presignedUrl) {
-        throw new Error('Failed to get presigned URL.');
+        errorMessage.value = 'Failed to get a presigned URL. Please try again.';
+        isUploading.value = false;
+        return;
       }
+      // Step 2: Upload the file to S3 using XMLHttpRequest for progress
+      const xhr = new XMLHttpRequest();
 
-      // Step 2: Upload the file to S3 using the pre-signed URL
-      // Note: $fetch does not natively support tracking upload progress.
-      // To track progress, you can use the native fetch with XMLHttpRequest or other methods.
-      // Below is a simple upload without progress tracking.
+      xhr.open('PUT', presignedUrl, true);
+      xhr.setRequestHeader('Content-Type', selectedFile.type);
 
-      const uploadResponse = await fetch(presignedUrl, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': selectedFile.type,
-        },
-        body: selectedFile,
-      });
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          uploadProgress.value = Math.round((event.loaded / event.total) * 100);
+        }
+      };
 
-      if (uploadResponse.ok) {
-        const res = await uploadResponse.json();
-        console.log('Upload Success:', res);
-        return res;
-      } else {
-        throw new Error('Failed to upload file.');
-      }
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          uploadSuccess.value = true;
+          return presignedUrl.split('?')[0];
+        }
+        isUploading.value = false;
+      };
+
+      xhr.onerror = () => {
+        errorMessage.value = 'Failed to upload the file. Please try again.';
+        isUploading.value = false;
+      };
+
+      xhr.send(selectedFile);
     } catch (error) {
       console.error('Upload Error:', error);
+      errorMessage.value = 'Failed to upload the file. Please try again.';
+      isUploading.value = false;
     }
   };
-  return { uploadFile, getPresignedUrl };
+  return { getPresignedUrl, uploadFile };
 };
