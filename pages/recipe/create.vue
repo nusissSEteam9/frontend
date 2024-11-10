@@ -127,20 +127,7 @@
               <div class="input-group">
                 <input
                   type="text"
-                  v-model="recipe.ingredients[index].name"
-                  class="form-control"
-                  readonly
-                />
-                <input
-                  type="number"
-                  v-model="recipe.ingredients[index].quantity"
-                  class="form-control"
-                  min="1"
-                  readonly
-                />
-                <input
-                  type="text"
-                  v-model="recipe.ingredients[index].unit"
+                  v-model="recipe.ingredients[index].food_text"
                   class="form-control"
                   readonly
                 />
@@ -159,7 +146,7 @@
       <!-- 显示营养信息表格 -->
       <table
         class="table table-bordered"
-        v-if="recipe.nutrition.length > 0"
+        v-if="recipe.ingredients.length > 0"
         style="font-size: x-small"
       >
         <thead>
@@ -175,17 +162,29 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(nutrient, index) in recipe.nutrition" :key="index">
-            <td>{{ nutrient.food_text }}</td>
-            <td>{{ nutrient.calories }}</td>
-            <td>{{ nutrient.carbohydrate }}</td>
-            <td>{{ nutrient.fat }}</td>
-            <td>{{ nutrient.protein }}</td>
-            <td>{{ nutrient.saturated_fat }}</td>
-            <td>{{ nutrient.sodium }}</td>
-            <td>{{ nutrient.sugar }}</td>
+          <tr v-for="(ingredients, index) in recipe.ingredients" :key="index">
+            <td>{{ ingredients.food_text }}</td>
+            <td>{{ ingredients.calories }}</td>
+            <td>{{ ingredients.carbohydrate }}</td>
+            <td>{{ ingredients.fat }}</td>
+            <td>{{ ingredients.protein }}</td>
+            <td>{{ ingredients.saturated_fat }}</td>
+            <td>{{ ingredients.sodium }}</td>
+            <td>{{ ingredients.sugar }}</td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td>Total</td>
+            <td>{{ recipe.nutrition.calories }}</td>
+            <td>{{ recipe.nutrition.carbohydrate }}</td>
+            <td>{{ recipe.nutrition.fat }}</td>
+            <td>{{ recipe.nutrition.protein }}</td>
+            <td>{{ recipe.nutrition.saturated_fat }}</td>
+            <td>{{ recipe.nutrition.sodium }}</td>
+            <td>{{ recipe.nutrition.sugar }}</td>
+          </tr>
+        </tfoot>
       </table>
 
       <!-- Steps Section -->
@@ -359,7 +358,15 @@ const recipe = ref({
   preparationTime: 1,
   timeUnit: 'minutes',
   ingredients: [],
-  nutrition: [],
+  nutrition: {
+    calories: 0,
+    carbohydrate: 0,
+    fat: 0,
+    protein: 0,
+    saturated_fat: 0,
+    sodium: 0,
+    sugar: 0,
+  },
   steps: [],
   notes: '',
   tags: [],
@@ -379,6 +386,7 @@ const tagsErrorMessage = ref('');
 const pictureInputErrorMessage = ref('');
 const imagePreview = ref(null);
 const router = useRouter();
+const selectedFile = ref(null);
 
 // Add ingredient to the list
 const addIngredient = async () => {
@@ -405,14 +413,9 @@ const addIngredient = async () => {
         'This ingredient does not have nutrition data or not exist.';
       return;
     }
-    recipe.value.ingredients.push({
-      name: newIngredient.value,
-      quantity: newIngredientQuantity.value,
-      unit: newIngredientUnit.value,
-    });
 
     const totalNutrients = data.totalNutrients;
-    recipe.value.nutrition.push({
+    recipe.value.ingredients.push({
       food_text: ingrValue,
       calories: totalNutrients.ENERC_KCAL?.quantity || 0,
       carbohydrate: totalNutrients.CHOCDF?.quantity || 0,
@@ -422,6 +425,14 @@ const addIngredient = async () => {
       sodium: totalNutrients.NA?.quantity || 0,
       sugar: totalNutrients.SUGAR?.quantity || 0,
     });
+
+    recipe.value.nutrition.calories += totalNutrients.ENERC_KCAL?.quantity || 0;
+    recipe.value.nutrition.carbohydrate += totalNutrients.CHOCDF?.quantity || 0;
+    recipe.value.nutrition.fat += totalNutrients.FAT?.quantity || 0;
+    recipe.value.nutrition.protein += totalNutrients.PROCNT?.quantity || 0;
+    recipe.value.nutrition.saturated_fat += totalNutrients.FASAT?.quantity || 0;
+    recipe.value.nutrition.sodium += totalNutrients.NA?.quantity || 0;
+    recipe.value.nutrition.sugar += totalNutrients.SUGAR?.quantity || 0;
 
     newIngredient.value = '';
     newIngredientQuantity.value = 1;
@@ -437,8 +448,16 @@ const addIngredient = async () => {
 
 // Remove ingredient
 const removeIngredient = (index) => {
+  recipe.value.nutrition.calories -= recipe.value.ingredients[index].calories;
+  recipe.value.nutrition.carbohydrate -=
+    recipe.value.ingredients[index].carbohydrate;
+  recipe.value.nutrition.fat -= recipe.value.ingredients[index].fat;
+  recipe.value.nutrition.protein -= recipe.value.ingredients[index].protein;
+  recipe.value.nutrition.saturated_fat -=
+    recipe.value.ingredients[index].saturated_fat;
+  recipe.value.nutrition.sodium -= recipe.value.ingredients[index].sodium;
+  recipe.value.nutrition.sugar -= recipe.value.ingredients[index].sugar;
   recipe.value.ingredients.splice(index, 1);
-  recipe.value.nutrition.splice(index, 1);
 };
 
 // Add step to the list
@@ -483,11 +502,16 @@ const removeTag = (index) => {
 const previewImage = (event) => {
   const file = event.target.files[0];
   if (file) {
+    if (file.size > 2 * 1024 * 1024) {
+      pictureInputErrorMessage.value = 'Image size must be less than 2MB.';
+      return;
+    }
+    pictureInputErrorMessage.value = '';
+    selectedFile.value = file;
     const reader = new FileReader();
     reader.onload = (e) => {
       imagePreview.value = e.target.result;
     };
-    recipe.value.image = file.name;
     reader.readAsDataURL(file);
   }
 };
@@ -511,9 +535,14 @@ const submitForm = async () => {
           : recipe.value.preparationTime * 60,
       steps: recipe.value.steps,
       ingredients: recipe.value.ingredients.map((ing) => ({
-        name: ing.name,
-        quantity: ing.quantity,
-        unit: ing.unit,
+        food_text: ing.food_text,
+        calories: ing.calories,
+        carbohydrate: ing.carbohydrate,
+        fat: ing.fat,
+        protein: ing.protein,
+        saturated_fat: ing.saturated_fat,
+        sodium: ing.sodium,
+        sugar: ing.sugar,
       })),
       nutrition: recipe.value.nutrition,
       notes: recipe.value.notes,
@@ -522,6 +551,25 @@ const submitForm = async () => {
       image: recipe.value.image,
     };
     console.log('Submitting recipe:', JSON.stringify(payload));
+
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile.value);
+      const data = await $fetch('/api/recipe/uploadImage', {
+        baseURL: useRuntimeConfig().public.backendProxyUrl,
+        method: 'POST',
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${authStore.token}`,
+        },
+      });
+      console.log(data.url);
+      payload.image = data.url;
+    } catch (error) {
+      console.error('Failed to save image', error);
+      alert('Failed to save recipe.');
+      return;
+    }
 
     try {
       await $fetch('/api/recipe/create', {

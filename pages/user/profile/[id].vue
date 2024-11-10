@@ -45,7 +45,7 @@
             <NuxtLink :to="`/recipe/detail/${recipe.id}`">
               <img
                 class="card-img-top"
-                :src="`/images/${recipe.image}`"
+                :src="recipe.image ? recipe.image : '/images/recipe01.jpg'"
                 alt="Recipe Image"
                 style="width: 100%; height: 200px; object-fit: cover"
               />
